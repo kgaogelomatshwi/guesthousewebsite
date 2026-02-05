@@ -6,12 +6,18 @@
 @endphp
 
 <div class="booking-options">
+    @if(session('success'))
+        <x-alert type="success">{{ session('success') }}</x-alert>
+    @endif
+    @if(session('error'))
+        <x-alert type="error">{{ session('error') }}</x-alert>
+    @endif
     @if($mode === 'OTA_REDIRECT')
         <div class="grid-2">
             <div>
                 <h3>Book on your preferred platform</h3>
-                <p>We will redirect you to our trusted OTA listing for instant confirmation.</p>
-                @include('public.partials.booking-cta')
+                <p>Choose your dates and guests, then we will redirect you to Booking.com or Airbnb.</p>
+                @include('public.partials.ota-redirect-form')
             </div>
             <div>
                 <h3>Already booked?</h3>
@@ -28,7 +34,7 @@
             </div>
             <div>
                 <h3>Prefer Booking.com or Airbnb?</h3>
-                @include('public.partials.booking-cta')
+                @include('public.partials.ota-redirect-form')
                 <div class="spacer"></div>
                 <h3>Already booked?</h3>
                 @include('public.partials.external-booking-form')

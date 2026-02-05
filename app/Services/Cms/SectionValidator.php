@@ -16,6 +16,20 @@ class SectionValidator
                 'secondary_button_label' => ['nullable', 'string', 'max:80'],
                 'secondary_button_url' => ['nullable', 'string', 'max:255'],
             ],
+            'hero_slider' => [
+                'slides' => ['required', 'array', 'min:1'],
+                'slides.*.title' => ['required', 'string', 'max:150'],
+                'slides.*.subtitle' => ['nullable', 'string'],
+                'slides.*.image' => ['required', 'string'],
+                'slides.*.button_label' => ['nullable', 'string', 'max:80'],
+                'slides.*.button_url' => ['nullable', 'string', 'max:255'],
+                'slides.*.secondary_button_label' => ['nullable', 'string', 'max:80'],
+                'slides.*.secondary_button_url' => ['nullable', 'string', 'max:255'],
+            ],
+            'booking_bar' => [
+                'title' => ['nullable', 'string', 'max:150'],
+                'subtitle' => ['nullable', 'string', 'max:255'],
+            ],
             'text_block' => [
                 'title' => ['nullable', 'string', 'max:150'],
                 'body' => ['required', 'string'],

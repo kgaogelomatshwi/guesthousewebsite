@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePageSectionRequest;
+use App\Models\Media;
 use App\Models\Page;
 use App\Models\PageSection;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +15,9 @@ class PageSectionController extends Controller
 {
     public function create(Page $page): View
     {
-        return view('admin.page-sections.create', compact('page'));
+        $media = Media::query()->orderByDesc('created_at')->limit(200)->get();
+
+        return view('admin.page-sections.create', compact('page', 'media'));
     }
 
     public function store(StorePageSectionRequest $request): RedirectResponse
@@ -35,7 +38,9 @@ class PageSectionController extends Controller
 
     public function edit(Page $page, PageSection $section): View
     {
-        return view('admin.page-sections.edit', compact('page', 'section'));
+        $media = Media::query()->orderByDesc('created_at')->limit(200)->get();
+
+        return view('admin.page-sections.edit', compact('page', 'section', 'media'));
     }
 
     public function update(StorePageSectionRequest $request, Page $page, PageSection $section): RedirectResponse

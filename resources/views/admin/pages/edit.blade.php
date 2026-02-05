@@ -43,35 +43,26 @@
         <a class="btn btn-outline" href="{{ route('admin.pages.sections.create', $page) }}">Add Section</a>
     </div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Type</th>
-            <th>Position</th>
-            <th>Status</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
+    <ul class="sortable-list js-sortable" data-input-prefix="positions">
         @foreach($page->sections as $section)
-            <tr>
-                <td>{{ $section->type }}</td>
-                <td>
-                    <input type="number" name="positions[{{ $section->id }}]" value="{{ $section->position }}" class="input-inline" form="reorder-form">
-                </td>
-                <td>{{ $section->is_active ? 'Active' : 'Hidden' }}</td>
-                <td>
+            <li class="sortable-item" draggable="true" data-section-id="{{ $section->id }}">
+                <span class="drag-handle" title="Drag to reorder">::</span>
+                <div class="sortable-meta">
+                    <strong>{{ $section->type }}</strong>
+                    <span class="muted">{{ $section->is_active ? 'Active' : 'Hidden' }}</span>
+                </div>
+                <div class="sortable-actions">
                     <a class="btn btn-outline" href="{{ route('admin.pages.sections.edit', [$page, $section]) }}">Edit</a>
                     <form method="post" action="{{ route('admin.pages.sections.destroy', [$page, $section]) }}" class="inline">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-ghost" type="submit">Delete</button>
                     </form>
-                </td>
-            </tr>
+                </div>
+                <input type="hidden" name="positions[{{ $section->id }}]" value="{{ $section->position }}" form="reorder-form">
+            </li>
         @endforeach
-        </tbody>
-    </table>
+    </ul>
     <form id="reorder-form" method="post" action="{{ route('admin.pages.sections.reorder', $page) }}">
         @csrf
         <button class="btn btn-primary" type="submit">Update Order</button>

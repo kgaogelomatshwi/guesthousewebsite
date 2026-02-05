@@ -7,11 +7,12 @@
 
 <div class="booking-cta {{ $variant ?? '' }}">
     @if($mode === 'OTA_REDIRECT')
+        <a class="btn btn-primary js-track-cta" data-event="start_booking" href="{{ route('booking.create') }}">Book Now</a>
         @if($bookingCom)
-            <a class="btn btn-primary js-track-cta" data-event="click_bookingcom" href="{{ $bookingCom }}" target="_blank" rel="noopener">Book on Booking.com</a>
+            <a class="btn btn-outline js-track-cta" data-event="click_bookingcom" href="{{ $bookingCom }}" target="_blank" rel="noopener">Booking.com</a>
         @endif
         @if($airbnb)
-            <a class="btn btn-outline js-track-cta" data-event="click_airbnb" href="{{ $airbnb }}" target="_blank" rel="noopener">Book on Airbnb</a>
+            <a class="btn btn-ghost js-track-cta" data-event="click_airbnb" href="{{ $airbnb }}" target="_blank" rel="noopener">Airbnb</a>
         @endif
     @elseif($mode === 'HYBRID')
         @if($directEnabled)

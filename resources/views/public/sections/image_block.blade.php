@@ -1,6 +1,11 @@
 @php
     $alignment = $data['alignment'] ?? 'left';
-    $image = !empty($data['image']) ? asset('storage/' . $data['image']) : null;
+    $image = null;
+    if (!empty($data['image'])) {
+        $image = \Illuminate\Support\Str::startsWith($data['image'], ['http://', 'https://'])
+            ? $data['image']
+            : asset('storage/' . $data['image']);
+    }
 @endphp
 <section class="section section-light">
     <div class="container grid-2 {{ $alignment === 'right' ? 'reverse' : '' }}">

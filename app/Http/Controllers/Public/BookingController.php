@@ -78,6 +78,49 @@ class BookingController extends Controller
         return $gateway->initiatePayment($booking);
     }
 
+    public function otaRedirect(Request $request, SettingsService $settings): RedirectResponse
+    {
+        $data = $request->validate([
+            'platform' => ['required', 'in:bookingcom,airbnb'],
+            'check_in' => ['required', 'date'],
+            'check_out' => ['required', 'date', 'after:check_in'],
+            'guests' => ['required', 'integer', 'min:1'],
+            'rooms' => ['nullable', 'integer', 'min:1'],
+        ]);
+
+        $platform = $data['platform'];
+        $baseUrl = $settings->get($platform === 'bookingcom' ? 'bookingcom_url' : 'airbnb_url');
+
+        if (empty($baseUrl)) {
+            return back()->with('error', 'OTA link is not configured yet.');
+        }
+
+        $checkIn = Carbon::parse($data['check_in'])->format('Y-m-d');
+        $checkOut = Carbon::parse($data['check_out'])->format('Y-m-d');
+        $guests = (string) $data['guests'];
+        $rooms = (string) ($data['rooms'] ?? 1);
+
+        $url = strtr($baseUrl, [
+            '{check_in}' => $checkIn,
+            '{check_out}' => $checkOut,
+            '{adults}' => $guests,
+            '{guests}' => $guests,
+            '{rooms}' => $rooms,
+        ]);
+
+        if ($url === $baseUrl) {
+            $query = http_build_query([
+                'check_in' => $checkIn,
+                'check_out' => $checkOut,
+                'guests' => $guests,
+                'rooms' => $rooms,
+            ]);
+            $url = $baseUrl . (str_contains($baseUrl, '?') ? '&' : '?') . $query;
+        }
+
+        return redirect()->away($url);
+    }
+
     public function thankYou(): View
     {
         return view('public.pages.booking-thank-you');

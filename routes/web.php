@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EnquiryController as AdminEnquiryController;
 use App\Http\Controllers\Admin\ExternalBookingController as AdminExternalBookingController;
 use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
+use App\Http\Controllers\Admin\MediaController as AdminMediaController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\PageSectionController as AdminPageSectionController;
 use App\Http\Controllers\Admin\RateController as AdminRateController;
@@ -52,6 +53,7 @@ Route::post('/enquiries', [EnquiryController::class, 'store'])->name('enquiries.
 Route::get('/enquiry/thank-you', [EnquiryController::class, 'thankYou'])->name('enquiry.thankyou');
 
 Route::post('/booking/direct', [BookingController::class, 'store'])->name('booking.store');
+Route::post('/booking/ota', [BookingController::class, 'otaRedirect'])->name('booking.ota');
 Route::get('/booking/thank-you', [BookingController::class, 'thankYou'])->name('booking.thankyou');
 
 Route::post('/external-bookings', [ExternalBookingController::class, 'store'])->name('external-bookings.store');
@@ -94,6 +96,7 @@ Route::prefix('admin')
         Route::resource('amenities', AdminAmenityController::class)->except(['show']);
         Route::resource('rates', AdminRateController::class)->except(['show']);
         Route::resource('gallery', AdminGalleryController::class)->except(['show']);
+        Route::resource('media', AdminMediaController::class)->only(['index', 'store', 'destroy']);
         Route::post('gallery/{gallery}/images', [AdminGalleryController::class, 'storeImage'])->name('gallery.images.store');
         Route::delete('gallery/images/{image}', [AdminGalleryController::class, 'destroyImage'])->name('gallery.images.destroy');
         Route::resource('attractions', AdminAttractionController::class)->except(['show']);

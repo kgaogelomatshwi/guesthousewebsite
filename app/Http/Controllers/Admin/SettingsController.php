@@ -32,8 +32,8 @@ class SettingsController extends Controller
             'default_seo_title' => ['nullable', 'string', 'max:160'],
             'default_seo_description' => ['nullable', 'string', 'max:255'],
             'booking_mode' => ['nullable', 'in:OTA_REDIRECT,DIRECT_BOOKING,HYBRID'],
-            'bookingcom_url' => ['nullable', 'url'],
-            'airbnb_url' => ['nullable', 'url'],
+            'bookingcom_url' => ['nullable', 'string', 'max:2048'],
+            'airbnb_url' => ['nullable', 'string', 'max:2048'],
             'direct_booking_enabled' => ['nullable', 'boolean'],
             'currency' => ['nullable', 'string', 'size:3'],
             'deposit_policy' => ['nullable', 'string', 'max:20'],
@@ -42,6 +42,8 @@ class SettingsController extends Controller
             'gtm_container_id' => ['nullable', 'string', 'max:30'],
             'google_site_verification_meta' => ['nullable', 'string', 'max:255'],
             'payment_provider' => ['nullable', 'string', 'max:50'],
+            'custom_css' => ['nullable', 'string'],
+            'custom_js' => ['nullable', 'string'],
         ]);
 
         if ($request->hasFile('logo')) {

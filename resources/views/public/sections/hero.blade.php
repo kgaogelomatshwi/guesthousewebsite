@@ -1,5 +1,10 @@
 @php
-    $bg = !empty($data['background_image']) ? asset('storage/' . $data['background_image']) : null;
+    $bg = null;
+    if (!empty($data['background_image'])) {
+        $bg = \Illuminate\Support\Str::startsWith($data['background_image'], ['http://', 'https://'])
+            ? $data['background_image']
+            : asset('storage/' . $data['background_image']);
+    }
 @endphp
 <section class="section section-hero" @if($bg) style="background-image: url('{{ $bg }}');" @endif>
     <div class="container">

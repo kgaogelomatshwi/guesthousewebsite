@@ -55,6 +55,11 @@
     @endif
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if(!empty($siteSettings['custom_css']))
+        <style>
+            {!! $siteSettings['custom_css'] !!}
+        </style>
+    @endif
     @stack('head')
 </head>
 <body @if(!empty($bodyEvent)) data-track-event="{{ $bodyEvent }}" @endif>
@@ -71,7 +76,12 @@
                     <span>{{ $siteSettings['site_name'] ?? 'Guesthouse' }}</span>
                 @endif
             </a>
-            <nav class="nav">
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="nav" id="site-nav">
                 <a href="{{ route('rooms.index') }}">Rooms</a>
                 <a href="{{ route('pages.about') }}">About</a>
                 <a href="{{ route('pages.rates') }}">Rates</a>
@@ -116,5 +126,10 @@
 
     @include('public.partials.whatsapp-button')
     @include('public.partials.schema')
+    @if(!empty($siteSettings['custom_js']))
+        <script>
+            {!! $siteSettings['custom_js'] !!}
+        </script>
+    @endif
 </body>
 </html>

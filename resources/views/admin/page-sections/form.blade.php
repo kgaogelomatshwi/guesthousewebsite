@@ -6,7 +6,7 @@
 <div class="form-row">
     <label>Section Type</label>
     <select name="type" id="section-type">
-        @foreach(['hero','text_block','image_block','feature_grid','amenities','featured_rooms','gallery_preview','testimonials_preview','cta','faq','map_embed'] as $type)
+        @foreach(['hero','hero_slider','booking_bar','text_block','image_block','feature_grid','amenities','featured_rooms','gallery_preview','testimonials_preview','cta','faq','map_embed'] as $type)
             <option value="{{ $type }}" @selected($currentType === $type)>{{ $type }}</option>
         @endforeach
     </select>
@@ -36,7 +36,19 @@
     </div>
     <div class="form-row">
         <label>Background Image Path (storage)</label>
-        <input type="text" name="content[background_image]" value="{{ $content['background_image'] ?? '' }}">
+        <input id="section-background-image" type="text" name="content[background_image]" value="{{ $content['background_image'] ?? '' }}">
+        <small>Use Media Library to upload and copy URLs.</small>
+        @if(!empty($media))
+            <div class="media-picker">
+                <select class="js-media-picker" data-target="section-background-image">
+                    <option value="">Select image</option>
+                    @foreach($media as $item)
+                        <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                    @endforeach
+                </select>
+                <small>Selected image path will be inserted.</small>
+            </div>
+        @endif
     </div>
     <div class="grid-2">
         <div class="form-row">
@@ -60,6 +72,133 @@
     </div>
 </div>
 
+<div class="section-fields" data-type="hero_slider">
+    @php($slides = $content['slides'] ?? [])
+    <div class="form-row">
+        <label>Slides</label>
+        <div id="hero-slider-list" class="slider-list">
+            @forelse($slides as $index => $slide)
+                <div class="slider-item" data-index="{{ $index }}">
+                    <div class="slider-header">
+                        <strong>Slide {{ $index + 1 }}</strong>
+                        <button class="btn btn-ghost js-remove-slide" type="button">Remove</button>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-row">
+                            <label>Title</label>
+                            <input type="text" name="content[slides][{{ $index }}][title]" value="{{ $slide['title'] ?? '' }}">
+                        </div>
+                        <div class="form-row">
+                            <label>Subtitle</label>
+                            <input type="text" name="content[slides][{{ $index }}][subtitle]" value="{{ $slide['subtitle'] ?? '' }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>Image Path (storage)</label>
+                        <input id="slide-image-{{ $index }}" type="text" name="content[slides][{{ $index }}][image]" value="{{ $slide['image'] ?? '' }}">
+                        @if(!empty($media))
+                            <div class="media-picker">
+                                <select class="js-media-picker" data-target="slide-image-{{ $index }}">
+                                    <option value="">Select image</option>
+                                    @foreach($media as $item)
+                                        <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-row">
+                            <label>Button Label</label>
+                            <input type="text" name="content[slides][{{ $index }}][button_label]" value="{{ $slide['button_label'] ?? '' }}">
+                        </div>
+                        <div class="form-row">
+                            <label>Button URL</label>
+                            <input type="text" name="content[slides][{{ $index }}][button_url]" value="{{ $slide['button_url'] ?? '' }}">
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-row">
+                            <label>Secondary Button Label</label>
+                            <input type="text" name="content[slides][{{ $index }}][secondary_button_label]" value="{{ $slide['secondary_button_label'] ?? '' }}">
+                        </div>
+                        <div class="form-row">
+                            <label>Secondary Button URL</label>
+                            <input type="text" name="content[slides][{{ $index }}][secondary_button_url]" value="{{ $slide['secondary_button_url'] ?? '' }}">
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <p class="muted">No slides yet. Add one below.</p>
+            @endforelse
+        </div>
+        <button class="btn btn-outline js-add-slide" type="button" data-template-target="hero-slide-template">Add Slide</button>
+    </div>
+    <template id="hero-slide-template">
+        <div class="slider-item" data-index="__INDEX__">
+            <div class="slider-header">
+                <strong>Slide __NUMBER__</strong>
+                <button class="btn btn-ghost js-remove-slide" type="button">Remove</button>
+            </div>
+            <div class="grid-2">
+                <div class="form-row">
+                    <label>Title</label>
+                    <input type="text" name="content[slides][__INDEX__][title]" value="">
+                </div>
+                <div class="form-row">
+                    <label>Subtitle</label>
+                    <input type="text" name="content[slides][__INDEX__][subtitle]" value="">
+                </div>
+            </div>
+            <div class="form-row">
+                <label>Image Path (storage)</label>
+                <input id="slide-image-__INDEX__" type="text" name="content[slides][__INDEX__][image]" value="">
+                @if(!empty($media))
+                    <div class="media-picker">
+                        <select class="js-media-picker" data-target="slide-image-__INDEX__">
+                            <option value="">Select image</option>
+                            @foreach($media as $item)
+                                <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+            </div>
+            <div class="grid-2">
+                <div class="form-row">
+                    <label>Button Label</label>
+                    <input type="text" name="content[slides][__INDEX__][button_label]" value="">
+                </div>
+                <div class="form-row">
+                    <label>Button URL</label>
+                    <input type="text" name="content[slides][__INDEX__][button_url]" value="">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-row">
+                    <label>Secondary Button Label</label>
+                    <input type="text" name="content[slides][__INDEX__][secondary_button_label]" value="">
+                </div>
+                <div class="form-row">
+                    <label>Secondary Button URL</label>
+                    <input type="text" name="content[slides][__INDEX__][secondary_button_url]" value="">
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+
+<div class="section-fields" data-type="booking_bar">
+    <div class="form-row">
+        <label>Title</label>
+        <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
+    </div>
+    <div class="form-row">
+        <label>Subtitle</label>
+        <input type="text" name="content[subtitle]" value="{{ $content['subtitle'] ?? '' }}">
+    </div>
+</div>
+
 <div class="section-fields" data-type="text_block">
     <div class="form-row">
         <label>Title</label>
@@ -74,7 +213,19 @@
 <div class="section-fields" data-type="image_block">
     <div class="form-row">
         <label>Image Path (storage)</label>
-        <input type="text" name="content[image]" value="{{ $content['image'] ?? '' }}">
+        <input id="section-image" type="text" name="content[image]" value="{{ $content['image'] ?? '' }}">
+        <small>Use Media Library to upload and copy URLs.</small>
+        @if(!empty($media))
+            <div class="media-picker">
+                <select class="js-media-picker" data-target="section-image">
+                    <option value="">Select image</option>
+                    @foreach($media as $item)
+                        <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                    @endforeach
+                </select>
+                <small>Selected image path will be inserted.</small>
+            </div>
+        @endif
     </div>
     <div class="form-row">
         <label>Caption</label>

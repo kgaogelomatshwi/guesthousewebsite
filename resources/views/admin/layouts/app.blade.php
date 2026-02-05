@@ -19,6 +19,7 @@
                 <a href="{{ route('admin.amenities.index') }}">Amenities</a>
                 <a href="{{ route('admin.rates.index') }}">Rates</a>
                 <a href="{{ route('admin.gallery.index') }}">Gallery</a>
+                <a href="{{ route('admin.media.index') }}">Media Library</a>
                 <a href="{{ route('admin.attractions.index') }}">Attractions</a>
                 <a href="{{ route('admin.testimonials.index') }}">Testimonials</a>
                 <a href="{{ route('admin.enquiries.index') }}">Enquiries</a>

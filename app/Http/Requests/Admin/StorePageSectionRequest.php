@@ -29,6 +29,13 @@ class StorePageSectionRequest extends FormRequest
             $content['custom_list'] = $items;
         }
 
+        if ($this->filled('slides_json')) {
+            $decoded = json_decode($this->input('slides_json'), true);
+            if (is_array($decoded)) {
+                $content['slides'] = $decoded;
+            }
+        }
+
         $this->merge([
             'content' => $content,
         ]);
@@ -39,6 +46,8 @@ class StorePageSectionRequest extends FormRequest
         $type = $this->input('type');
         $allowedTypes = [
             'hero',
+            'hero_slider',
+            'booking_bar',
             'text_block',
             'image_block',
             'feature_grid',

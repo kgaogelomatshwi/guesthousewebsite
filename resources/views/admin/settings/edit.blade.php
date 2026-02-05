@@ -59,10 +59,12 @@
                 <div class="form-row">
                     <label>Booking.com URL</label>
                     <input type="text" name="bookingcom_url" value="{{ $settings['bookingcom_url'] ?? '' }}">
+                    <small>Use placeholders: <code>{check_in}</code>, <code>{check_out}</code>, <code>{adults}</code>, <code>{rooms}</code>.</small>
                 </div>
                 <div class="form-row">
                     <label>Airbnb URL</label>
                     <input type="text" name="airbnb_url" value="{{ $settings['airbnb_url'] ?? '' }}">
+                    <small>Use placeholders: <code>{check_in}</code>, <code>{check_out}</code>, <code>{adults}</code>, <code>{rooms}</code>.</small>
                 </div>
                 <div class="form-row">
                     <label>Direct Booking Enabled</label>
@@ -98,6 +100,14 @@
                 <div class="form-row">
                     <label>Payment Provider</label>
                     <input type="text" name="payment_provider" value="{{ $settings['payment_provider'] ?? 'stub' }}">
+                </div>
+                <div class="form-row">
+                    <label>Custom CSS</label>
+                    <textarea name="custom_css" rows="6">{{ $settings['custom_css'] ?? '' }}</textarea>
+                </div>
+                <div class="form-row">
+                    <label>Custom JS</label>
+                    <textarea name="custom_js" rows="6">{{ $settings['custom_js'] ?? '' }}</textarea>
                 </div>
             </div>
         </div>
