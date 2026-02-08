@@ -16,6 +16,15 @@ class SectionValidator
                 'secondary_button_label' => ['nullable', 'string', 'max:80'],
                 'secondary_button_url' => ['nullable', 'string', 'max:255'],
             ],
+            'hero_booking' => [
+                'title' => ['required', 'string', 'max:150'],
+                'subtitle' => ['nullable', 'string'],
+                'background_image' => ['nullable', 'string'],
+                'button_label' => ['nullable', 'string', 'max:80'],
+                'button_url' => ['nullable', 'string', 'max:255'],
+                'secondary_button_label' => ['nullable', 'string', 'max:80'],
+                'secondary_button_url' => ['nullable', 'string', 'max:255'],
+            ],
             'hero_slider' => [
                 'slides' => ['required', 'array', 'min:1'],
                 'slides.*.title' => ['required', 'string', 'max:150'],
@@ -45,6 +54,22 @@ class SectionValidator
                 'items.*.title' => ['required', 'string', 'max:120'],
                 'items.*.icon' => ['nullable', 'string', 'max:120'],
                 'items.*.text' => ['required', 'string'],
+            ],
+            'about_highlights' => [
+                'title' => ['required', 'string', 'max:150'],
+                'body' => ['required', 'string'],
+                'button_label' => ['nullable', 'string', 'max:80'],
+                'button_url' => ['nullable', 'string', 'max:255'],
+                'stats' => ['required', 'array', 'min:1'],
+                'stats.*.label' => ['required', 'string', 'max:80'],
+                'stats.*.value' => ['required', 'string', 'max:20'],
+            ],
+            'services_icons' => [
+                'title' => ['nullable', 'string', 'max:150'],
+                'items' => ['required', 'array'],
+                'items.*.title' => ['required', 'string', 'max:120'],
+                'items.*.icon' => ['nullable', 'string', 'max:120'],
+                'items.*.text' => ['nullable', 'string'],
             ],
             'amenities' => [
                 'title' => ['nullable', 'string', 'max:150'],
@@ -79,6 +104,13 @@ class SectionValidator
             'map_embed' => [
                 'title' => ['nullable', 'string', 'max:150'],
                 'embed_code' => ['required', 'string'],
+            ],
+            'location_preview' => [
+                'title' => ['required', 'string', 'max:150'],
+                'address' => ['required', 'string'],
+                'embed_code' => ['required', 'string'],
+                'button_label' => ['nullable', 'string', 'max:80'],
+                'button_url' => ['nullable', 'string', 'max:255'],
             ],
             default => [],
         };

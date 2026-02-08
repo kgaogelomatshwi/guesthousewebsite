@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Mail\BookingConfirmation;
+use App\Mail\BookingReceived;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\Room;
@@ -11,6 +13,7 @@ use App\Services\SettingsService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class BookingController extends Controller
@@ -23,10 +26,16 @@ class BookingController extends Controller
             'phone' => ['nullable', 'string', 'max:50'],
             'check_in' => ['required', 'date'],
             'check_out' => ['required', 'date', 'after:check_in'],
-            'guests' => ['required', 'integer', 'min:1'],
+            'guests' => ['nullable', 'integer', 'min:1'],
+            'adults' => ['required_without:guests', 'integer', 'min:1'],
+            'children' => ['nullable', 'integer', 'min:0'],
             'room_id' => ['nullable', 'exists:rooms,id'],
             'notes' => ['nullable', 'string'],
         ]);
+
+        if (empty($data['guests'])) {
+            $data['guests'] = max(1, (int) ($data['adults'] ?? 0) + (int) ($data['children'] ?? 0));
+        }
 
         $room = null;
         $currency = $settings->get('currency', 'ZAR');
@@ -64,6 +73,12 @@ class BookingController extends Controller
             'source' => 'direct',
         ]);
 
+        $adminEmail = $settings->get('email');
+        if ($adminEmail) {
+            Mail::to($adminEmail)->send(new BookingReceived($booking));
+        }
+        Mail::to($booking->email)->send(new BookingConfirmation($booking));
+
         $provider = $settings->get('payment_provider', 'stub');
         Payment::create([
             'booking_id' => $booking->id,
@@ -84,7 +99,8 @@ class BookingController extends Controller
             'platform' => ['required', 'in:bookingcom,airbnb'],
             'check_in' => ['required', 'date'],
             'check_out' => ['required', 'date', 'after:check_in'],
-            'guests' => ['required', 'integer', 'min:1'],
+            'adults' => ['required', 'integer', 'min:1'],
+            'children' => ['nullable', 'integer', 'min:0'],
             'rooms' => ['nullable', 'integer', 'min:1'],
         ]);
 
@@ -97,14 +113,16 @@ class BookingController extends Controller
 
         $checkIn = Carbon::parse($data['check_in'])->format('Y-m-d');
         $checkOut = Carbon::parse($data['check_out'])->format('Y-m-d');
-        $guests = (string) $data['guests'];
+        $adults = (string) $data['adults'];
+        $children = (string) ($data['children'] ?? 0);
         $rooms = (string) ($data['rooms'] ?? 1);
 
         $url = strtr($baseUrl, [
             '{check_in}' => $checkIn,
             '{check_out}' => $checkOut,
-            '{adults}' => $guests,
-            '{guests}' => $guests,
+            '{adults}' => $adults,
+            '{children}' => $children,
+            '{guests}' => $adults,
             '{rooms}' => $rooms,
         ]);
 
@@ -112,7 +130,8 @@ class BookingController extends Controller
             $query = http_build_query([
                 'check_in' => $checkIn,
                 'check_out' => $checkOut,
-                'guests' => $guests,
+                'adults' => $adults,
+                'children' => $children,
                 'rooms' => $rooms,
             ]);
             $url = $baseUrl . (str_contains($baseUrl, '?') ? '&' : '?') . $query;

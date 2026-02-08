@@ -14,15 +14,19 @@
     </div>
     <div class="grid gap-2">
         <label>Check-in</label>
-        <input type="date" name="check_in" value="{{ old('check_in') }}" required>
+        <input type="date" name="check_in" value="{{ old('check_in', request('check_in')) }}" required>
     </div>
     <div class="grid gap-2">
         <label>Check-out</label>
-        <input type="date" name="check_out" value="{{ old('check_out') }}" required>
+        <input type="date" name="check_out" value="{{ old('check_out', request('check_out')) }}" required>
     </div>
     <div class="grid gap-2">
-        <label>Guests</label>
-        <input type="number" min="1" name="guests" value="{{ old('guests', 2) }}" required>
+        <label>Adults</label>
+        <input type="number" min="1" name="adults" value="{{ old('adults', request('adults', 2)) }}" required>
+    </div>
+    <div class="grid gap-2">
+        <label>Children</label>
+        <input type="number" min="0" name="children" value="{{ old('children', request('children', 0)) }}">
     </div>
     @if(!empty($rooms))
         <div class="grid gap-2">
@@ -30,13 +34,13 @@
             <select name="room_id">
                 <option value="">Any room</option>
                 @foreach($rooms as $room)
-                    <option value="{{ $room->id }}">{{ $room->title }}</option>
+                    <option value="{{ $room->id }}" @selected((string) request('room_id') === (string) $room->id)>{{ $room->title }}</option>
                 @endforeach
             </select>
         </div>
     @endif
     <div class="grid gap-2">
-        <label>Notes</label>
+        <label>Special Requests</label>
         <textarea name="notes" rows="3">{{ old('notes') }}</textarea>
     </div>
     <button class="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-semibold border border-transparent transition bg-black text-white shadow-lg js-track-cta" data-event="payment_initiated" type="submit">Proceed to Payment</button>

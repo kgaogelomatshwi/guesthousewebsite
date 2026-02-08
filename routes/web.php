@@ -29,11 +29,13 @@ use App\Http\Controllers\Public\GalleryController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\PageController;
 use App\Http\Controllers\Public\RoomController;
+use App\Http\Controllers\Public\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/about', [PageController::class, 'show'])->defaults('key', 'about')->name('pages.about');
+Route::get('/services', [PageController::class, 'show'])->defaults('key', 'services')->name('pages.services');
 Route::get('/rates', [PageController::class, 'show'])->defaults('key', 'rates')->name('pages.rates');
 Route::get('/policies', [PageController::class, 'show'])->defaults('key', 'policies')->name('pages.policies');
 Route::get('/contact', [PageController::class, 'show'])->defaults('key', 'contact')->name('pages.contact');
@@ -51,6 +53,8 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/booking', [EnquiryController::class, 'create'])->name('booking.create');
 Route::post('/enquiries', [EnquiryController::class, 'store'])->name('enquiries.store');
 Route::get('/enquiry/thank-you', [EnquiryController::class, 'thankYou'])->name('enquiry.thankyou');
+
+Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 
 Route::post('/booking/direct', [BookingController::class, 'store'])->name('booking.store');
 Route::post('/booking/ota', [BookingController::class, 'otaRedirect'])->name('booking.ota');

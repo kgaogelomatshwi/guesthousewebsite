@@ -14,7 +14,7 @@
         @endif
         <div class="grid gap-4 md:grid-cols-4">
             @foreach($images as $image)
-                <img class="w-full h-44 object-cover rounded-xl" src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption ?? 'Gallery image' }}">
+                <img class="w-full h-44 object-cover rounded-xl" src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption ?? 'Gallery image' }}" loading="lazy">
             @endforeach
         </div>
     </div>

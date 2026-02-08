@@ -19,7 +19,7 @@
             @foreach($posts as $post)
                 <x-card>
                     @if($post->cover_image)
-                        <img class="w-full h-52 object-cover" src="{{ asset('storage/' . $post->cover_image) }}" alt="{{ $post->title }}">
+                        <img class="w-full h-52 object-cover" src="{{ asset('storage/' . $post->cover_image) }}" alt="{{ $post->title }}" loading="lazy">
                     @endif
                     <div class="p-5 space-y-2">
                         <h3 class="text-lg font-semibold">{{ $post->title }}</h3>

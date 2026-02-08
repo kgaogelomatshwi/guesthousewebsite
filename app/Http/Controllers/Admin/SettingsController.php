@@ -32,6 +32,7 @@ class SettingsController extends Controller
             'default_seo_title' => ['nullable', 'string', 'max:160'],
             'default_seo_description' => ['nullable', 'string', 'max:255'],
             'booking_mode' => ['nullable', 'in:OTA_REDIRECT,DIRECT_BOOKING,HYBRID'],
+            'ota_mode' => ['nullable', 'in:bookingcom,airbnb,both'],
             'bookingcom_url' => ['nullable', 'string', 'max:2048'],
             'airbnb_url' => ['nullable', 'string', 'max:2048'],
             'direct_booking_enabled' => ['nullable', 'boolean'],

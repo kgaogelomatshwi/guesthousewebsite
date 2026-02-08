@@ -20,7 +20,7 @@
             </div>
             <div>
                 @if($attraction->image_path)
-                    <img class="w-full h-auto rounded-xl" src="{{ asset('storage/' . $attraction->image_path) }}" alt="{{ $attraction->title }}">
+                    <img class="w-full h-auto rounded-xl" src="{{ asset('storage/' . $attraction->image_path) }}" alt="{{ $attraction->title }}" loading="lazy">
                 @endif
             </div>
         </div>

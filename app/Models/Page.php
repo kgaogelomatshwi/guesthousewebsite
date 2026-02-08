@@ -13,6 +13,9 @@ class Page extends Model
         'slug',
         'seo_title',
         'seo_description',
+        'custom_html',
+        'custom_css',
+        'custom_js',
         'is_active',
     ];
 

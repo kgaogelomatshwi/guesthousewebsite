@@ -12,7 +12,8 @@
                     : asset('storage/' . $slide['image']);
             }
         @endphp
-        <div class="hero-slide @if($index === 0) is-active @endif" @if($bg) style="background-image: url('{{ $bg }}');" @endif>
+        <div class="hero-slide absolute inset-0 grid items-center opacity-0 transition-opacity duration-700" @if($bg) style="background-image: url('{{ $bg }}'); background-size: cover; background-position: center;" @endif>
+            <div class="absolute inset-0 bg-black/55"></div>
             <div class="container relative z-10 py-24 text-white">
                 <h1 class="text-4xl md:text-5xl uppercase tracking-widest">{{ $slide['title'] ?? 'Welcome to Our Guesthouse' }}</h1>
                 @if(!empty($slide['subtitle']))

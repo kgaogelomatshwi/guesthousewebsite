@@ -13,7 +13,7 @@
     <section class="py-16 bg-white">
         <div class="container max-w-3xl mx-auto">
             @if($post->cover_image)
-                <img class="w-full h-auto rounded-xl" src="{{ asset('storage/' . $post->cover_image) }}" alt="{{ $post->title }}">
+                <img class="w-full h-auto rounded-xl" src="{{ asset('storage/' . $post->cover_image) }}" alt="{{ $post->title }}" loading="lazy">
             @endif
             <div class="space-y-3 leading-relaxed">{!! nl2br(e($post->body)) !!}</div>
         </div>

@@ -29,6 +29,13 @@ class StorePageSectionRequest extends FormRequest
             $content['custom_list'] = $items;
         }
 
+        if ($this->filled('stats_json')) {
+            $decoded = json_decode($this->input('stats_json'), true);
+            if (is_array($decoded)) {
+                $content['stats'] = $decoded;
+            }
+        }
+
         if ($this->filled('slides_json')) {
             $decoded = json_decode($this->input('slides_json'), true);
             if (is_array($decoded)) {
@@ -46,11 +53,14 @@ class StorePageSectionRequest extends FormRequest
         $type = $this->input('type');
         $allowedTypes = [
             'hero',
+            'hero_booking',
             'hero_slider',
             'booking_bar',
             'text_block',
             'image_block',
             'feature_grid',
+            'about_highlights',
+            'services_icons',
             'amenities',
             'featured_rooms',
             'gallery_preview',
@@ -58,6 +68,7 @@ class StorePageSectionRequest extends FormRequest
             'cta',
             'faq',
             'map_embed',
+            'location_preview',
         ];
 
         $rules = [

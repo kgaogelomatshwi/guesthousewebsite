@@ -13,6 +13,7 @@ class PageSeeder extends Seeder
         $pages = [
             ['key' => 'home', 'title' => 'Home', 'slug' => '/'],
             ['key' => 'about', 'title' => 'About', 'slug' => 'about'],
+            ['key' => 'services', 'title' => 'Services', 'slug' => 'services'],
             ['key' => 'rates', 'title' => 'Rates', 'slug' => 'rates'],
             ['key' => 'policies', 'title' => 'Policies', 'slug' => 'policies'],
             ['key' => 'contact', 'title' => 'Contact', 'slug' => 'contact'],
@@ -38,17 +39,22 @@ class PageSeeder extends Seeder
 
         $home = Page::where('key', 'home')->first();
         if ($home) {
+            PageSection::where('page_id', $home->id)
+                ->where('type', 'hero')
+                ->update(['is_active' => false]);
+
             PageSection::updateOrCreate([
                 'page_id' => $home->id,
-                'type' => 'hero',
+                'type' => 'hero_booking',
                 'position' => 1,
             ], [
                 'content_json' => json_encode([
-                    'title' => 'A Riverside Retreat in the Heart of the Valley',
-                    'subtitle' => 'Slow mornings, mountain views, and locally sourced breakfasts.',
-                    'button_label' => 'Book Your Stay',
+                    'title' => 'Tranquil Countryside Escape in Limpopo',
+                    'subtitle' => 'Warm hospitality, fresh air, and value-for-money rooms for families and couples.',
+                    'background_image' => 'https://cdn.pixabay.com/photo/2018/07/23/01/03/landscape-3555890_1280.jpg',
+                    'button_label' => 'Book Online',
                     'button_url' => '/booking',
-                    'secondary_button_label' => 'Explore Rooms',
+                    'secondary_button_label' => 'View Rooms',
                     'secondary_button_url' => '/rooms',
                 ]),
                 'is_active' => true,
@@ -56,15 +62,19 @@ class PageSeeder extends Seeder
 
             PageSection::updateOrCreate([
                 'page_id' => $home->id,
-                'type' => 'feature_grid',
+                'type' => 'about_highlights',
                 'position' => 2,
             ], [
                 'content_json' => json_encode([
-                    'title' => 'Why Guests Love Us',
-                    'items' => [
-                        ['title' => 'Farm-to-table breakfasts', 'icon' => 'breakfast', 'text' => 'Seasonal menus with local produce.'],
-                        ['title' => 'Mountain views', 'icon' => 'mountain', 'text' => 'Wake up to soft light and open skies.'],
-                        ['title' => 'Quiet and private', 'icon' => 'garden', 'text' => 'Secluded gardens and curated spaces.'],
+                    'title' => 'A Welcoming Guesthouse in the Limpopo Countryside',
+                    'body' => '<p>Set among rolling hills and quiet farmland, our guesthouse offers a calm, family-friendly stay with honest value and personal service.</p><p>Enjoy comfortable rooms, self-catering options, and easy access to nearby nature trails.</p>',
+                    'button_label' => 'Read More',
+                    'button_url' => '/about',
+                    'stats' => [
+                        ['label' => 'Rooms', 'value' => '8'],
+                        ['label' => 'Bathrooms', 'value' => '8'],
+                        ['label' => 'Staff', 'value' => '6'],
+                        ['label' => 'Parking', 'value' => 'Secure'],
                     ],
                 ]),
                 'is_active' => true,
@@ -84,24 +94,17 @@ class PageSeeder extends Seeder
 
             PageSection::updateOrCreate([
                 'page_id' => $home->id,
-                'type' => 'amenities',
+                'type' => 'services_icons',
                 'position' => 4,
             ], [
                 'content_json' => json_encode([
-                    'title' => 'Amenities',
-                    'mode' => 'auto',
-                ]),
-                'is_active' => true,
-            ]);
-
-            PageSection::updateOrCreate([
-                'page_id' => $home->id,
-                'type' => 'gallery_preview',
-                'position' => 5,
-            ], [
-                'content_json' => json_encode([
-                    'title' => 'Moments Around the Guesthouse',
-                    'limit' => 6,
+                    'title' => 'Services & Amenities',
+                    'items' => [
+                        ['title' => 'Wi-Fi', 'icon' => '📶', 'text' => 'Stay connected throughout your visit.'],
+                        ['title' => 'Secure Parking', 'icon' => '🅿️', 'text' => 'Safe on-site parking for all guests.'],
+                        ['title' => 'Self-Catering', 'icon' => '🍳', 'text' => 'Kitchens in select units.'],
+                        ['title' => 'Breakfast', 'icon' => '☕', 'text' => 'Fresh, simple breakfast options.'],
+                    ],
                 ]),
                 'is_active' => true,
             ]);
@@ -109,10 +112,10 @@ class PageSeeder extends Seeder
             PageSection::updateOrCreate([
                 'page_id' => $home->id,
                 'type' => 'testimonials_preview',
-                'position' => 6,
+                'position' => 5,
             ], [
                 'content_json' => json_encode([
-                    'title' => 'Guest Stories',
+                    'title' => 'Guest Reviews',
                     'limit' => 3,
                 ]),
                 'is_active' => true,
@@ -120,12 +123,15 @@ class PageSeeder extends Seeder
 
             PageSection::updateOrCreate([
                 'page_id' => $home->id,
-                'type' => 'map_embed',
-                'position' => 7,
+                'type' => 'location_preview',
+                'position' => 6,
             ], [
                 'content_json' => json_encode([
-                    'title' => 'Find Us',
-                    'embed_code' => '<iframe src="https://maps.google.com/maps?q=Stellenbosch&t=&z=11&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>',
+                    'title' => 'Find Us in Limpopo',
+                    'address' => '123 Countryside Road, Limpopo, South Africa',
+                    'embed_code' => '<iframe src="https://maps.google.com/maps?q=Limpopo&t=&z=9&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>',
+                    'button_label' => 'Get Directions',
+                    'button_url' => 'https://maps.google.com/?q=Limpopo',
                 ]),
                 'is_active' => true,
             ]);
@@ -140,7 +146,27 @@ class PageSeeder extends Seeder
             ], [
                 'content_json' => json_encode([
                     'title' => 'Our Story',
-                    'body' => '<p>Riverside Guesthouse is a family-run retreat nestled between vineyards and mountains.</p>',
+                    'body' => '<p>We are a family-run guesthouse offering a quiet, affordable stay in the Limpopo countryside.</p>',
+                ]),
+                'is_active' => true,
+            ]);
+        }
+
+        $services = Page::where('key', 'services')->first();
+        if ($services) {
+            PageSection::updateOrCreate([
+                'page_id' => $services->id,
+                'type' => 'services_icons',
+                'position' => 1,
+            ], [
+                'content_json' => json_encode([
+                    'title' => 'Services & Amenities',
+                    'items' => [
+                        ['title' => 'Wi-Fi', 'icon' => '📶', 'text' => 'Free throughout the guesthouse.'],
+                        ['title' => 'Secure Parking', 'icon' => '🅿️', 'text' => 'On-site parking for guests.'],
+                        ['title' => 'Self-Catering', 'icon' => '🍳', 'text' => 'Selected units include kitchens.'],
+                        ['title' => 'Breakfast', 'icon' => '☕', 'text' => 'Optional breakfast available.'],
+                    ],
                 ]),
                 'is_active' => true,
             ]);

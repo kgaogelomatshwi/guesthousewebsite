@@ -20,6 +20,8 @@ class StoreEnquiryRequest extends FormRequest
             'check_in' => ['nullable', 'date'],
             'check_out' => ['nullable', 'date', 'after_or_equal:check_in'],
             'guests' => ['nullable', 'integer', 'min:1'],
+            'adults' => ['nullable', 'integer', 'min:1'],
+            'children' => ['nullable', 'integer', 'min:0'],
             'room_id' => ['nullable', 'exists:rooms,id'],
             'message' => ['nullable', 'string'],
             'source' => ['nullable', 'string', 'max:50'],

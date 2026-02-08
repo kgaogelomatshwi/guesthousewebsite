@@ -19,7 +19,7 @@
             @foreach($attractions as $attraction)
                 <x-card>
                     @if($attraction->image_path)
-                        <img class="w-full h-52 object-cover" src="{{ asset('storage/' . $attraction->image_path) }}" alt="{{ $attraction->title }}">
+                        <img class="w-full h-52 object-cover" src="{{ asset('storage/' . $attraction->image_path) }}" alt="{{ $attraction->title }}" loading="lazy">
                     @endif
                     <div class="p-5 space-y-2">
                         <h3 class="text-lg font-semibold">{{ $attraction->title }}</h3>

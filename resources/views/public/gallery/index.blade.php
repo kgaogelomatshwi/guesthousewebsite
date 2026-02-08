@@ -20,7 +20,7 @@
                 <h2 class="text-2xl font-semibold">{{ $category->name }}</h2>
                 <div class="grid gap-4 md:grid-cols-4">
                     @foreach($category->images as $image)
-                        <img class="w-full h-44 object-cover rounded-xl" src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption ?? $category->name }}">
+                        <img class="w-full h-44 object-cover rounded-xl" src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption ?? $category->name }}" loading="lazy">
                     @endforeach
                 </div>
             </div>

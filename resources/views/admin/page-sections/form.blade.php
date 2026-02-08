@@ -5,19 +5,19 @@
 
 <div class="form-row">
     <label>Section Type</label>
-    <select name="type" id="section-type">
-        @foreach(['hero','hero_slider','booking_bar','text_block','image_block','feature_grid','amenities','featured_rooms','gallery_preview','testimonials_preview','cta','faq','map_embed'] as $type)
+    <select name="type" id="section-type" class="w-full border border-black/20 rounded-lg px-3 py-2.5">
+        @foreach(['hero','hero_booking','hero_slider','booking_bar','text_block','image_block','feature_grid','about_highlights','services_icons','amenities','featured_rooms','gallery_preview','testimonials_preview','cta','faq','map_embed','location_preview'] as $type)
             <option value="{{ $type }}" @selected($currentType === $type)>{{ $type }}</option>
         @endforeach
     </select>
 </div>
 
-<div class="form-row">
+<div class="grid gap-2">
     <label>Position</label>
     <input type="number" name="position" value="{{ old('position', $section->position ?? 0) }}">
 </div>
 
-<div class="form-row">
+<div class="grid gap-2">
     <label>Active</label>
     <select name="is_active">
         <option value="1" @selected(old('is_active', $section->is_active ?? true))>Yes</option>
@@ -26,15 +26,15 @@
 </div>
 
 <div class="section-fields" data-type="hero">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Title</label>
         <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Subtitle</label>
         <textarea name="content[subtitle]" rows="2">{{ $content['subtitle'] ?? '' }}</textarea>
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Background Image Path (storage)</label>
         <input id="section-background-image" type="text" name="content[background_image]" value="{{ $content['background_image'] ?? '' }}">
         <small>Use Media Library to upload and copy URLs.</small>
@@ -50,22 +50,67 @@
             </div>
         @endif
     </div>
-    <div class="grid-2">
-        <div class="form-row">
+    <div class="grid gap-4 md:grid-cols-2">
+        <div class="grid gap-2">
             <label>Button Label</label>
             <input type="text" name="content[button_label]" value="{{ $content['button_label'] ?? '' }}">
         </div>
-        <div class="form-row">
+        <div class="grid gap-2">
             <label>Button URL</label>
             <input type="text" name="content[button_url]" value="{{ $content['button_url'] ?? '' }}">
         </div>
     </div>
-    <div class="grid-2">
-        <div class="form-row">
+    <div class="grid gap-4 md:grid-cols-2">
+        <div class="grid gap-2">
             <label>Secondary Button Label</label>
             <input type="text" name="content[secondary_button_label]" value="{{ $content['secondary_button_label'] ?? '' }}">
         </div>
-        <div class="form-row">
+        <div class="grid gap-2">
+            <label>Secondary Button URL</label>
+            <input type="text" name="content[secondary_button_url]" value="{{ $content['secondary_button_url'] ?? '' }}">
+        </div>
+    </div>
+</div>
+
+<div class="section-fields" data-type="hero_booking">
+    <div class="grid gap-2">
+        <label>Title</label>
+        <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
+    </div>
+    <div class="grid gap-2">
+        <label>Subtitle</label>
+        <textarea name="content[subtitle]" rows="2">{{ $content['subtitle'] ?? '' }}</textarea>
+    </div>
+    <div class="grid gap-2">
+        <label>Background Image Path (storage)</label>
+        <input id="section-hero-booking-bg" type="text" name="content[background_image]" value="{{ $content['background_image'] ?? '' }}">
+        @if(!empty($media))
+            <div class="media-picker">
+                <select class="js-media-picker" data-target="section-hero-booking-bg">
+                    <option value="">Select image</option>
+                    @foreach($media as $item)
+                        <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
+    </div>
+    <div class="grid gap-4 md:grid-cols-2">
+        <div class="grid gap-2">
+            <label>Button Label</label>
+            <input type="text" name="content[button_label]" value="{{ $content['button_label'] ?? '' }}">
+        </div>
+        <div class="grid gap-2">
+            <label>Button URL</label>
+            <input type="text" name="content[button_url]" value="{{ $content['button_url'] ?? '' }}">
+        </div>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2">
+        <div class="grid gap-2">
+            <label>Secondary Button Label</label>
+            <input type="text" name="content[secondary_button_label]" value="{{ $content['secondary_button_label'] ?? '' }}">
+        </div>
+        <div class="grid gap-2">
             <label>Secondary Button URL</label>
             <input type="text" name="content[secondary_button_url]" value="{{ $content['secondary_button_url'] ?? '' }}">
         </div>
@@ -200,18 +245,18 @@
 </div>
 
 <div class="section-fields" data-type="text_block">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Title</label>
         <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Body (HTML allowed)</label>
         <textarea name="content[body]" rows="6">{{ $content['body'] ?? '' }}</textarea>
     </div>
 </div>
 
 <div class="section-fields" data-type="image_block">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Image Path (storage)</label>
         <input id="section-image" type="text" name="content[image]" value="{{ $content['image'] ?? '' }}">
         <small>Use Media Library to upload and copy URLs.</small>
@@ -227,11 +272,11 @@
             </div>
         @endif
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Caption</label>
         <input type="text" name="content[caption]" value="{{ $content['caption'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Alignment</label>
         <select name="content[alignment]">
             @foreach(['left','right','center'] as $align)
@@ -242,86 +287,122 @@
 </div>
 
 <div class="section-fields" data-type="feature_grid">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Title</label>
         <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
+        <label>Items JSON (array of {title, icon, text})</label>
+        <textarea name="items_json" rows="6">{{ json_encode($content['items'] ?? [], JSON_PRETTY_PRINT) }}</textarea>
+    </div>
+</div>
+
+<div class="section-fields" data-type="about_highlights">
+    <div class="grid gap-2">
+        <label>Title</label>
+        <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
+    </div>
+    <div class="grid gap-2">
+        <label>Body (HTML allowed)</label>
+        <textarea name="content[body]" rows="6">{{ $content['body'] ?? '' }}</textarea>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2">
+        <div class="grid gap-2">
+            <label>Button Label</label>
+            <input type="text" name="content[button_label]" value="{{ $content['button_label'] ?? '' }}">
+        </div>
+        <div class="grid gap-2">
+            <label>Button URL</label>
+            <input type="text" name="content[button_url]" value="{{ $content['button_url'] ?? '' }}">
+        </div>
+    </div>
+    <div class="grid gap-2">
+        <label>Stats JSON (array of {label, value})</label>
+        <textarea name="stats_json" rows="6">{{ json_encode($content['stats'] ?? [], JSON_PRETTY_PRINT) }}</textarea>
+    </div>
+</div>
+
+<div class="section-fields" data-type="services_icons">
+    <div class="grid gap-2">
+        <label>Title</label>
+        <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
+    </div>
+    <div class="grid gap-2">
         <label>Items JSON (array of {title, icon, text})</label>
         <textarea name="items_json" rows="6">{{ json_encode($content['items'] ?? [], JSON_PRETTY_PRINT) }}</textarea>
     </div>
 </div>
 
 <div class="section-fields" data-type="amenities">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Title</label>
         <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Mode</label>
         <select name="content[mode]">
             <option value="auto" @selected(($content['mode'] ?? 'auto') === 'auto')>Auto (from amenities)</option>
             <option value="custom" @selected(($content['mode'] ?? 'auto') === 'custom')>Custom List</option>
         </select>
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Custom List (one per line)</label>
         <textarea name="custom_list_text" rows="4">{{ isset($content['custom_list']) ? implode("\n", $content['custom_list']) : '' }}</textarea>
     </div>
 </div>
 
 <div class="section-fields" data-type="featured_rooms">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Title</label>
         <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Limit</label>
         <input type="number" name="content[limit]" value="{{ $content['limit'] ?? 3 }}">
     </div>
 </div>
 
 <div class="section-fields" data-type="gallery_preview">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Title</label>
         <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Category ID (optional)</label>
         <input type="number" name="content[category_id]" value="{{ $content['category_id'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Limit</label>
         <input type="number" name="content[limit]" value="{{ $content['limit'] ?? 6 }}">
     </div>
 </div>
 
 <div class="section-fields" data-type="testimonials_preview">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Title</label>
         <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Limit</label>
         <input type="number" name="content[limit]" value="{{ $content['limit'] ?? 3 }}">
     </div>
 </div>
 
 <div class="section-fields" data-type="cta">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Headline</label>
         <input type="text" name="content[headline]" value="{{ $content['headline'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Body</label>
         <textarea name="content[body]" rows="3">{{ $content['body'] ?? '' }}</textarea>
     </div>
-    <div class="grid-2">
-        <div class="form-row">
+    <div class="grid gap-4 md:grid-cols-2">
+        <div class="grid gap-2">
             <label>Button Label</label>
             <input type="text" name="content[button_label]" value="{{ $content['button_label'] ?? '' }}">
         </div>
-        <div class="form-row">
+        <div class="grid gap-2">
             <label>Button URL</label>
             <input type="text" name="content[button_url]" value="{{ $content['button_url'] ?? '' }}">
         </div>
@@ -329,23 +410,48 @@
 </div>
 
 <div class="section-fields" data-type="faq">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Title</label>
         <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>FAQ Items JSON (array of {question, answer})</label>
         <textarea name="items_json" rows="6">{{ json_encode($content['items'] ?? [], JSON_PRETTY_PRINT) }}</textarea>
     </div>
 </div>
 
 <div class="section-fields" data-type="map_embed">
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Title</label>
         <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
     </div>
-    <div class="form-row">
+    <div class="grid gap-2">
         <label>Embed Code</label>
         <textarea name="content[embed_code]" rows="4">{{ $content['embed_code'] ?? '' }}</textarea>
+    </div>
+</div>
+
+<div class="section-fields" data-type="location_preview">
+    <div class="grid gap-2">
+        <label>Title</label>
+        <input type="text" name="content[title]" value="{{ $content['title'] ?? '' }}">
+    </div>
+    <div class="grid gap-2">
+        <label>Address</label>
+        <textarea name="content[address]" rows="3">{{ $content['address'] ?? '' }}</textarea>
+    </div>
+    <div class="grid gap-2">
+        <label>Embed Code</label>
+        <textarea name="content[embed_code]" rows="4">{{ $content['embed_code'] ?? '' }}</textarea>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2">
+        <div class="grid gap-2">
+            <label>Button Label</label>
+            <input type="text" name="content[button_label]" value="{{ $content['button_label'] ?? '' }}">
+        </div>
+        <div class="grid gap-2">
+            <label>Button URL</label>
+            <input type="text" name="content[button_url]" value="{{ $content['button_url'] ?? '' }}">
+        </div>
     </div>
 </div>

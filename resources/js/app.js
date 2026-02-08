@@ -138,7 +138,13 @@ const attachHeroSlider = () => {
 
         const setActive = (next) => {
             slides.forEach((slide, i) => {
-                slide.classList.toggle('is-active', i === next);
+                if (i === next) {
+                    slide.classList.add('opacity-100');
+                    slide.classList.remove('opacity-0');
+                } else {
+                    slide.classList.add('opacity-0');
+                    slide.classList.remove('opacity-100');
+                }
             });
             index = next;
         };
@@ -197,7 +203,8 @@ const attachMobileNav = () => {
     const nav = document.getElementById('site-nav');
     if (!toggle || !nav) return;
     toggle.addEventListener('click', () => {
-        const isOpen = nav.classList.toggle('is-open');
+        const isOpen = nav.classList.toggle('max-h-80');
+        nav.classList.toggle('py-3', isOpen);
         toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
 };

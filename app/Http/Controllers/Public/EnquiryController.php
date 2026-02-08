@@ -31,7 +31,14 @@ class EnquiryController extends Controller
 
     public function store(StoreEnquiryRequest $request, SettingsService $settings): RedirectResponse
     {
-        $enquiry = Enquiry::create($request->validated());
+        $data = $request->validated();
+        if (empty($data['guests'])) {
+            $adults = (int) ($data['adults'] ?? 0);
+            $children = (int) ($data['children'] ?? 0);
+            $data['guests'] = max(1, $adults + $children);
+        }
+
+        $enquiry = Enquiry::create($data);
 
         $adminEmail = $settings->get('email');
         if ($adminEmail) {

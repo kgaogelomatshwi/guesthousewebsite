@@ -1,6 +1,12 @@
 @php
     $bookingCom = $siteSettings['bookingcom_url'] ?? null;
     $airbnb = $siteSettings['airbnb_url'] ?? null;
+    $otaMode = $siteSettings['ota_mode'] ?? 'both';
+    if ($otaMode === 'bookingcom') {
+        $airbnb = null;
+    } elseif ($otaMode === 'airbnb') {
+        $bookingCom = null;
+    }
 @endphp
 
 @php
@@ -40,8 +46,12 @@
             </div>
         </div>
         <div class="grid gap-2">
-            <label>Guests</label>
-            <input type="number" min="1" name="guests" value="{{ old('guests', 2) }}" required>
+            <label>Adults</label>
+            <input type="number" min="1" name="adults" value="{{ old('adults', 2) }}" required>
+        </div>
+        <div class="grid gap-2">
+            <label>Children</label>
+            <input type="number" min="0" name="children" value="{{ old('children', 0) }}">
         </div>
         <div class="grid gap-2">
             <label>Rooms (optional)</label>

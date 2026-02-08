@@ -6,6 +6,10 @@
             @includeIf('public.sections.' . $section->type, ['data' => $section->content_array, 'section' => $section])
         @endforeach
 
+        @if(!empty($page->custom_html))
+            {!! $page->custom_html !!}
+        @endif
+
         @if($page->key === 'rates')
             <section class="py-16 bg-white">
                 <div class="container">
@@ -66,6 +70,9 @@
             <section class="py-16 bg-white">
                 <div class="container">
                     <h2 class="text-2xl font-semibold">{{ $page->title }}</h2>
+                    <div class="mt-3">
+                        @include('public.partials.booking-steps', ['current' => 'details'])
+                    </div>
                     @include('public.partials.booking-options', ['rooms' => $rooms ?? []])
                 </div>
             </section>

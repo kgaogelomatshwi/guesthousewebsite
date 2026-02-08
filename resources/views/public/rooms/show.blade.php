@@ -26,7 +26,7 @@
             </div>
             <div class="grid gap-4">
                 @foreach($room->images as $image)
-                    <img class="rounded-xl" src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption ?? $room->title }}">
+                    <img class="rounded-xl" src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption ?? $room->title }}" loading="lazy">
                 @endforeach
             </div>
         </div>

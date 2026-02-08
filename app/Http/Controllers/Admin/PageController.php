@@ -31,6 +31,9 @@ class PageController extends Controller
             'slug' => ['required', 'string', 'max:150'],
             'seo_title' => ['nullable', 'string', 'max:160'],
             'seo_description' => ['nullable', 'string', 'max:255'],
+            'custom_html' => ['nullable', 'string'],
+            'custom_css' => ['nullable', 'string'],
+            'custom_js' => ['nullable', 'string'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
