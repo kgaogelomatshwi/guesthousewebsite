@@ -7,16 +7,16 @@
             : asset('storage/' . $data['image']);
     }
 @endphp
-<section class="section section-light">
-    <div class="container grid-2 {{ $alignment === 'right' ? 'reverse' : '' }}">
+<section class="py-16 bg-white">
+    <div class="container grid gap-6 md:grid-cols-2 {{ $alignment === 'right' ? 'reverse' : '' }}">
         <div>
             @if($image)
-                <img class="feature-img" src="{{ $image }}" alt="{{ $data['caption'] ?? '' }}">
+                <img class="w-full h-auto" src="{{ $image }}" alt="{{ $data['caption'] ?? '' }}">
             @endif
         </div>
         <div>
             @if(!empty($data['caption']))
-                <h3>{{ $data['caption'] }}</h3>
+                <h3 class="text-xl font-semibold">{{ $data['caption'] }}</h3>
             @endif
         </div>
     </div>

@@ -1,13 +1,13 @@
 @props(['href' => null, 'variant' => 'primary'])
 
 @php
-    $base = 'btn';
+    $base = 'inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-semibold border border-transparent transition';
     $variants = [
-        'primary' => 'btn-primary',
-        'outline' => 'btn-outline',
-        'ghost' => 'btn-ghost',
+        'primary' => 'bg-black text-white shadow-lg',
+        'outline' => 'bg-transparent border-black text-black',
+        'ghost' => 'bg-transparent text-black',
     ];
-    $classes = $base . ' ' . ($variants[$variant] ?? $variants['primary']);
+    $classes = trim($base . ' ' . ($variants[$variant] ?? $variants['primary']));
 @endphp
 
 @if($href)

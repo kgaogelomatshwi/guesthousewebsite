@@ -1,8 +1,8 @@
-<section class="section section-light">
-    <div class="container narrow">
+<section class="py-16 bg-white">
+    <div class="container max-w-3xl mx-auto">
         @if(!empty($data['title']))
-            <h2>{{ $data['title'] }}</h2>
+            <h2 class="text-2xl font-semibold">{{ $data['title'] }}</h2>
         @endif
-        <div class="rich-text">{!! $data['body'] ?? '' !!}</div>
+        <div class="space-y-3 leading-relaxed">{!! $data['body'] ?? '' !!}</div>
     </div>
 </section>

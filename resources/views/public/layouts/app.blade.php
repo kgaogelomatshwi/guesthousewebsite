@@ -67,21 +67,21 @@
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ $siteSettings['gtm_container_id'] }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     @endif
 
-    <header class="site-header">
-        <div class="container header-inner">
-            <a class="logo" href="{{ route('home') }}">
+    <header class="sticky top-0 z-50 bg-white border-b border-black/10">
+        <div class="container flex items-center justify-between gap-6 py-4">
+            <a class="text-sm font-bold tracking-widest uppercase" href="{{ route('home') }}">
                 @if($logo)
                     <img src="{{ asset('storage/' . $logo) }}" alt="{{ $siteSettings['site_name'] ?? 'Guesthouse' }}">
                 @else
                     <span>{{ $siteSettings['site_name'] ?? 'Guesthouse' }}</span>
                 @endif
             </a>
-            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <button class="nav-toggle flex flex-col gap-1.5 border border-black/20 bg-white px-3 py-2 rounded-lg cursor-pointer md:hidden" type="button" aria-expanded="false" aria-controls="site-nav">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-            <nav class="nav" id="site-nav">
+            <nav class="nav flex flex-wrap gap-5 font-semibold uppercase text-sm tracking-wider md:flex" id="site-nav">
                 <a href="{{ route('rooms.index') }}">Rooms</a>
                 <a href="{{ route('pages.about') }}">About</a>
                 <a href="{{ route('pages.rates') }}">Rates</a>
@@ -90,7 +90,7 @@
                 <a href="{{ route('pages.contact') }}">Contact</a>
                 <a href="{{ route('blog.index') }}">Blog</a>
             </nav>
-            <div class="nav-cta">
+            <div class="flex gap-3">
                 @include('public.partials.booking-cta', ['variant' => 'header'])
             </div>
         </div>
@@ -100,8 +100,8 @@
         @yield('content')
     </main>
 
-    <footer class="site-footer">
-        <div class="container footer-grid">
+    <footer class="bg-black text-white py-14">
+        <div class="container grid gap-6" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
             <div>
                 <h4>{{ $siteSettings['site_name'] ?? 'Guesthouse' }}</h4>
                 <p>{{ $siteSettings['address'] ?? 'Address goes here' }}</p>
@@ -119,7 +119,7 @@
                 <a href="{{ route('booking.create') }}">Book Now</a>
             </div>
         </div>
-        <div class="container footer-bottom">
+        <div class="container mt-8 border-t border-white/20 pt-4 text-sm">
             <p>(c) {{ date('Y') }} {{ $siteSettings['site_name'] ?? 'Guesthouse' }}. All rights reserved.</p>
         </div>
     </footer>

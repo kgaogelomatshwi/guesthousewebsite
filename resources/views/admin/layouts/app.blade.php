@@ -7,11 +7,11 @@
     <title>Admin - {{ $siteSettings['site_name'] ?? 'Guesthouse' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="admin">
-    <div class="admin-shell">
-        <aside class="admin-sidebar">
-            <h2>Admin</h2>
-            <nav>
+<body class="bg-neutral-100">
+    <div class="grid min-h-screen" style="grid-template-columns: 240px 1fr;">
+        <aside class="bg-black text-white p-6">
+            <h2 class="text-lg font-semibold">Admin</h2>
+            <nav class="grid gap-2 mt-5">
                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                 <a href="{{ route('admin.settings.edit') }}">Settings</a>
                 <a href="{{ route('admin.pages.index') }}">Pages</a>
@@ -33,8 +33,8 @@
                 @endif
             </nav>
         </aside>
-        <div class="admin-content">
-            <header class="admin-topbar">
+        <div class="p-6">
+            <header class="flex items-center justify-between mb-5">
                 <div>
                     <strong>{{ $siteSettings['site_name'] ?? 'Guesthouse' }}</strong>
                 </div>
@@ -50,7 +50,7 @@
                 @endif
                 @if($errors->any())
                     <x-alert type="error">
-                        <ul>
+                        <ul class="list-disc pl-5">
                             @foreach($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach

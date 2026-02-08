@@ -1,17 +1,17 @@
-<section class="section section-light">
+<section class="py-16 bg-white">
     <div class="container">
         @if(!empty($data['title']))
-            <h2>{{ $data['title'] }}</h2>
+            <h2 class="text-2xl font-semibold">{{ $data['title'] }}</h2>
         @endif
-        <div class="grid-3">
+        <div class="grid gap-6 md:grid-cols-3">
             @foreach($data['items'] ?? [] as $item)
                 <x-card>
-                    <div class="card-body">
+                    <div class="p-5 space-y-2">
                         @if(!empty($item['icon']))
-                            <div class="icon">{{ $item['icon'] }}</div>
+                            <div class="text-2xl">{{ $item['icon'] }}</div>
                         @endif
-                        <h3>{{ $item['title'] ?? '' }}</h3>
-                        <p>{{ $item['text'] ?? '' }}</p>
+                        <h3 class="text-lg font-semibold">{{ $item['title'] ?? '' }}</h3>
+                        <p class="text-neutral-600">{{ $item['text'] ?? '' }}</p>
                     </div>
                 </x-card>
             @endforeach

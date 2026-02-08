@@ -7,14 +7,14 @@
     }
     $images = $query->limit($limit)->get();
 @endphp
-<section class="section section-light">
+<section class="py-16 bg-white">
     <div class="container">
         @if(!empty($data['title']))
-            <h2>{{ $data['title'] }}</h2>
+            <h2 class="text-2xl font-semibold">{{ $data['title'] }}</h2>
         @endif
-        <div class="grid-4">
+        <div class="grid gap-4 md:grid-cols-4">
             @foreach($images as $image)
-                <img class="gallery-img" src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption ?? 'Gallery image' }}">
+                <img class="w-full h-44 object-cover rounded-xl" src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption ?? 'Gallery image' }}">
             @endforeach
         </div>
     </div>
