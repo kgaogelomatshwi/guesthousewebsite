@@ -129,31 +129,98 @@ const attachMediaPickers = () => {
 
 const attachHeroSlider = () => {
     document.querySelectorAll('.hero-slider').forEach((slider) => {
-        const slides = slider.querySelectorAll('.hero-slide');
+        const slides = Array.from(slider.querySelectorAll('.hero-slide'));
         if (slides.length <= 1) {
             return;
         }
-        let index = 0;
         const interval = Number(slider.dataset.interval || 6000);
+        const dots = Array.from(slider.querySelectorAll('[data-hero-dot]'));
+        const prevBtn = slider.querySelector('[data-hero-prev]');
+        const nextBtn = slider.querySelector('[data-hero-next]');
+        let index = 0;
+        let timer = null;
 
         const setActive = (next) => {
             slides.forEach((slide, i) => {
-                if (i === next) {
-                    slide.classList.add('opacity-100');
-                    slide.classList.remove('opacity-0');
-                } else {
-                    slide.classList.add('opacity-0');
-                    slide.classList.remove('opacity-100');
-                }
+                const isActive = i === next;
+                slide.classList.toggle('opacity-100', isActive);
+                slide.classList.toggle('opacity-0', !isActive);
+                slide.classList.toggle('is-active', isActive);
+            });
+            dots.forEach((dot, i) => {
+                const isActive = i === next;
+                dot.classList.toggle('is-active', isActive);
+                dot.setAttribute('aria-pressed', isActive ? 'true' : 'false');
             });
             index = next;
         };
 
+        const next = () => setActive((index + 1) % slides.length);
+        const prev = () => setActive((index - 1 + slides.length) % slides.length);
+
+        const start = () => {
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                next();
+            }, interval);
+        };
+
         setActive(0);
-        setInterval(() => {
-            const next = (index + 1) % slides.length;
-            setActive(next);
-        }, interval);
+        start();
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                prev();
+                start();
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                next();
+                start();
+            });
+        }
+
+        dots.forEach((dot) => {
+            dot.addEventListener('click', () => {
+                const target = Number(dot.dataset.heroDot || 0);
+                setActive(target);
+                start();
+            });
+        });
+
+        slider.addEventListener('mouseenter', () => {
+            if (timer) clearInterval(timer);
+        });
+
+        slider.addEventListener('mouseleave', () => {
+            start();
+        });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        slider.addEventListener('touchstart', (event) => {
+            const touch = event.touches[0];
+            if (!touch) return;
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        }, { passive: true });
+
+        slider.addEventListener('touchend', (event) => {
+            const touch = event.changedTouches[0];
+            if (!touch) return;
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (deltaX > 0) {
+                    prev();
+                } else {
+                    next();
+                }
+                start();
+            }
+        });
     });
 };
 

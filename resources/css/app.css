@@ -169,7 +169,7 @@
     }
 
     input, select, textarea {
-        @apply px-3 py-2.5 rounded-lg border border-black/20;
+        @apply px-3 py-2.5 rounded-lg border border-black/20 bg-white text-neutral-900 placeholder:text-neutral-400;
     }
 
     .checkbox-grid {
@@ -379,6 +379,30 @@
 
     .hero-slide .hero-inner {
         @apply relative z-10 py-24 text-white;
+    }
+
+    .hero-controls {
+        @apply absolute inset-y-0 left-0 right-0 flex items-center justify-between px-6 z-20 pointer-events-none;
+    }
+
+    .hero-nav {
+        @apply pointer-events-auto h-11 w-11 rounded-full bg-white/85 text-black font-bold shadow-lg transition;
+    }
+
+    .hero-nav:hover {
+        @apply bg-white;
+    }
+
+    .hero-dots {
+        @apply absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20;
+    }
+
+    .hero-dot {
+        @apply h-2.5 w-2.5 rounded-full bg-white/50 border border-white/60 transition;
+    }
+
+    .hero-dot.is-active {
+        @apply bg-white;
     }
 
     .booking-bar {

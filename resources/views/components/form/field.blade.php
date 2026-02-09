@@ -12,7 +12,7 @@
 @endphp
 
 <div class="grid gap-2">
-    <label for="{{ $id }}">{{ $label }}</label>
+    <label for="{{ $id }}" class="text-xs uppercase tracking-wider text-neutral-600">{{ $label }}</label>
     <input
         id="{{ $id }}"
         type="{{ $type }}"

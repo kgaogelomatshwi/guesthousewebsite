@@ -83,7 +83,7 @@
         <div class="container flex items-center justify-between gap-6 py-4">
             <a class="text-sm font-bold tracking-widest uppercase" href="{{ route('home') }}">
                 @if($logo)
-                    <img src="{{ asset('storage/' . $logo) }}" alt="{{ $siteSettings['site_name'] ?? 'Guesthouse' }}">
+                    <img class="h-10 md:h-12 w-auto max-w-[180px] object-contain" src="{{ asset('storage/' . $logo) }}" alt="{{ $siteSettings['site_name'] ?? 'Guesthouse' }}">
                 @else
                     <span>{{ $siteSettings['site_name'] ?? 'Guesthouse' }}</span>
                 @endif

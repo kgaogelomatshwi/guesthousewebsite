@@ -99,7 +99,8 @@ class BookingController extends Controller
             'platform' => ['required', 'in:bookingcom,airbnb'],
             'check_in' => ['required', 'date'],
             'check_out' => ['required', 'date', 'after:check_in'],
-            'adults' => ['required', 'integer', 'min:1'],
+            'guests' => ['required_without:adults', 'integer', 'min:1'],
+            'adults' => ['required_without:guests', 'integer', 'min:1'],
             'children' => ['nullable', 'integer', 'min:0'],
             'rooms' => ['nullable', 'integer', 'min:1'],
         ]);
@@ -113,16 +114,17 @@ class BookingController extends Controller
 
         $checkIn = Carbon::parse($data['check_in'])->format('Y-m-d');
         $checkOut = Carbon::parse($data['check_out'])->format('Y-m-d');
-        $adults = (string) $data['adults'];
+        $adults = (string) ($data['guests'] ?? $data['adults']);
         $children = (string) ($data['children'] ?? 0);
         $rooms = (string) ($data['rooms'] ?? 1);
+        $totalGuests = (string) ((int) $adults + (int) $children);
 
         $url = strtr($baseUrl, [
             '{check_in}' => $checkIn,
             '{check_out}' => $checkOut,
             '{adults}' => $adults,
             '{children}' => $children,
-            '{guests}' => $adults,
+            '{guests}' => $totalGuests,
             '{rooms}' => $rooms,
         ]);
 

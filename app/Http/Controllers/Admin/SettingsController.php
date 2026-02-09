@@ -39,6 +39,12 @@ class SettingsController extends Controller
             'currency' => ['nullable', 'string', 'size:3'],
             'deposit_policy' => ['nullable', 'string', 'max:20'],
             'cancellation_policy_text' => ['nullable', 'string'],
+            'google_reviews_enabled' => ['nullable', 'boolean'],
+            'google_api_key' => ['nullable', 'string', 'max:255'],
+            'google_place_id' => ['nullable', 'string', 'max:255'],
+            'google_place_url' => ['nullable', 'string', 'max:2048'],
+            'bookingcom_reviews_url' => ['nullable', 'string', 'max:2048'],
+            'reviews_min_rating' => ['nullable', 'integer', 'min:1', 'max:5'],
             'ga4_measurement_id' => ['nullable', 'string', 'max:30'],
             'gtm_container_id' => ['nullable', 'string', 'max:30'],
             'google_site_verification_meta' => ['nullable', 'string', 'max:255'],
@@ -58,7 +64,10 @@ class SettingsController extends Controller
         }
 
         foreach ($data as $key => $value) {
-            $type = in_array($key, ['direct_booking_enabled'], true) ? 'boolean' : null;
+            $type = in_array($key, ['direct_booking_enabled', 'google_reviews_enabled'], true) ? 'boolean' : null;
+            if ($key === 'reviews_min_rating') {
+                $type = 'int';
+            }
 
             if (in_array($key, ['social_links'], true) && is_string($value)) {
                 $value = json_encode(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $value))));

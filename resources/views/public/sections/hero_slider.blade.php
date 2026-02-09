@@ -1,8 +1,9 @@
 @php
     $slides = $data['slides'] ?? [];
+    $showBooking = $data['show_booking_form'] ?? true;
 @endphp
 
-<section class="relative min-h-[420px] overflow-hidden text-white bg-black" data-interval="6500">
+<section class="hero-slider relative min-h-[520px] overflow-hidden text-white bg-black" data-interval="6500">
     @foreach($slides as $index => $slide)
         @php
             $bg = null;
@@ -27,7 +28,25 @@
                         <a class="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-semibold border border-black text-black bg-transparent transition js-track-cta" data-event="cta_click" href="{{ $slide['secondary_button_url'] ?? route('rooms.index') }}">{{ $slide['secondary_button_label'] }}</a>
                     @endif
                 </div>
+
+                @if($showBooking)
+                    <div class="mt-10">
+                        @include('public.partials.availability-form')
+                    </div>
+                @endif
             </div>
         </div>
     @endforeach
+
+    @if(count($slides) > 1)
+        <div class="hero-controls">
+            <button class="hero-nav" type="button" aria-label="Previous slide" data-hero-prev>&larr;</button>
+            <button class="hero-nav" type="button" aria-label="Next slide" data-hero-next>&rarr;</button>
+        </div>
+        <div class="hero-dots" role="tablist" aria-label="Hero slides">
+            @foreach($slides as $index => $slide)
+                <button class="hero-dot" type="button" aria-label="Go to slide {{ $index + 1 }}" data-hero-dot="{{ $index }}"></button>
+            @endforeach
+        </div>
+    @endif
 </section>

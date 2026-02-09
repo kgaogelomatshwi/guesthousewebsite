@@ -46,17 +46,10 @@
             </div>
         </div>
         <div class="grid gap-2">
-            <label>Adults</label>
-            <input type="number" min="1" name="adults" value="{{ old('adults', 2) }}" required>
+            <label>Guests</label>
+            <input type="number" min="1" name="guests" value="{{ old('guests', 1) }}" required>
         </div>
-        <div class="grid gap-2">
-            <label>Children</label>
-            <input type="number" min="0" name="children" value="{{ old('children', 0) }}">
-        </div>
-        <div class="grid gap-2">
-            <label>Rooms (optional)</label>
-            <input type="number" min="1" name="rooms" value="{{ old('rooms', 1) }}">
-        </div>
+        <input type="hidden" name="rooms" value="1">
         <button class="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-semibold border border-transparent transition bg-black text-white shadow-lg js-track-cta" data-event="start_booking" type="submit">Book Now</button>
         <p class="text-sm text-neutral-600">We will redirect you to the selected platform. Dates and guest counts are passed via the URL if supported.</p>
     </form>

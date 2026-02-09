@@ -39,6 +39,12 @@ class PageSeeder extends Seeder
 
         $home = Page::where('key', 'home')->first();
         if ($home) {
+            if (empty($home->custom_html)) {
+                $home->update([
+                    'custom_html' => '<div class="custom-banner">Winter Special: Stay 3 nights, pay 2. <a href="/booking">Book now</a></div>',
+                ]);
+            }
+
             PageSection::where('page_id', $home->id)
                 ->where('type', 'hero')
                 ->update(['is_active' => false]);
