@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Public\AnalyticsController;
 use App\Http\Controllers\Public\AttractionController;
 use App\Http\Controllers\Public\BlogController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\Public\BookingController;
 use App\Http\Controllers\Public\EnquiryController;
 use App\Http\Controllers\Public\ExternalBookingController;
 use App\Http\Controllers\Public\GalleryController;
+use App\Http\Controllers\Public\GuestDashboardController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\PageController;
 use App\Http\Controllers\Public\RoomController;
@@ -56,7 +58,7 @@ Route::get('/enquiry/thank-you', [EnquiryController::class, 'thankYou'])->name('
 
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 
-Route::post('/booking/direct', [BookingController::class, 'store'])->name('booking.store');
+Route::post('/booking/direct', [BookingController::class, 'store'])->middleware('auth')->name('booking.store');
 Route::post('/booking/ota', [BookingController::class, 'otaRedirect'])->name('booking.ota');
 Route::get('/booking/thank-you', [BookingController::class, 'thankYou'])->name('booking.thankyou');
 
@@ -74,7 +76,13 @@ Route::get('/robots.txt', function () {
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
+Route::get('/register', [RegisterController::class, 'create'])->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+
+Route::middleware('auth')->group(function (): void {
+    Route::get('/my-bookings', [GuestDashboardController::class, 'index'])->name('guest.dashboard');
+});
 
 Route::prefix('admin')
     ->name('admin.')

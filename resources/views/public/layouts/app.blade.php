@@ -7,6 +7,17 @@
 
     @php
         $bookingMode = $siteSettings['booking_mode'] ?? 'DIRECT_BOOKING';
+        $otaMode = $siteSettings['ota_mode'] ?? 'both';
+        $bookingCom = $siteSettings['bookingcom_url'] ?? null;
+        $airbnb = $siteSettings['airbnb_url'] ?? null;
+        if ($otaMode === 'bookingcom') {
+            $airbnb = null;
+        } elseif ($otaMode === 'airbnb') {
+            $bookingCom = null;
+        }
+        $defaultOtaUrl = $bookingCom ?: $airbnb;
+        $primaryBookingUrl = ($bookingMode === 'OTA_REDIRECT' && $defaultOtaUrl) ? $defaultOtaUrl : route('booking.create');
+
         $page = $page ?? null;
         $seoTitle = $page?->seo_title ?? ($siteSettings['default_seo_title'] ?? ($page?->title ?? ($siteSettings['site_name'] ?? 'Guesthouse')));
         $seoDescription = $page?->seo_description ?? ($siteSettings['default_seo_description'] ?? null);
@@ -74,8 +85,18 @@
 
     <div class="bg-neutral-100 text-sm">
         <div class="container flex items-center justify-end gap-4 py-2">
-            <a href="{{ route('booking.create') }}">My Bookings</a>
-            <a href="{{ route('login') }}">Sign In</a>
+            @auth
+                <a href="{{ route('guest.dashboard') }}">My Bookings</a>
+                <form method="post" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">Logout</button>
+                </form>
+            @else
+                @if($bookingMode !== 'OTA_REDIRECT')
+                    <a href="{{ route('login') }}">Sign In</a>
+                    <a href="{{ route('register') }}">Create Account</a>
+                @endif
+            @endauth
         </div>
     </div>
 
@@ -97,6 +118,9 @@
                 <a href="{{ route('rooms.index') }}">Rooms</a>
                 <a href="{{ route('pages.services') }}">Services</a>
                 <a href="{{ route('pages.contact') }}">Contact Us</a>
+                @auth
+                    <a href="{{ route('guest.dashboard') }}">My Bookings</a>
+                @endauth
             </nav>
             <div class="flex gap-3">
                 @include('public.partials.booking-cta', ['variant' => 'header'])
@@ -124,9 +148,15 @@
                 <a href="{{ route('rooms.index') }}">Rooms</a>
                 <a href="{{ route('pages.services') }}">Services</a>
                 <a href="{{ route('pages.policies') }}">Policies</a>
-                <a href="{{ route('booking.create') }}">Book Now</a>
-                <a href="{{ route('booking.create') }}">My Bookings</a>
-                <a href="{{ route('login') }}">Sign In</a>
+                <a href="{{ $primaryBookingUrl }}" @if($bookingMode === 'OTA_REDIRECT') target="_blank" rel="noopener" @endif>Book Now</a>
+                @auth
+                    <a href="{{ route('guest.dashboard') }}">My Bookings</a>
+                @else
+                    @if($bookingMode !== 'OTA_REDIRECT')
+                        <a href="{{ route('login') }}">Sign In</a>
+                        <a href="{{ route('register') }}">Create Account</a>
+                    @endif
+                @endauth
             </div>
         </div>
         <div class="container mt-8 border-t border-white/20 pt-4 text-sm">
@@ -134,7 +164,7 @@
         </div>
     </footer>
 
-    <a href="{{ route('booking.create') }}" class="fixed bottom-4 right-4 md:hidden inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 font-semibold border border-transparent transition bg-black text-white shadow-lg z-[100]">BOOK ONLINE</a>
+    <a href="{{ $primaryBookingUrl }}" class="fixed bottom-4 right-4 md:hidden inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 font-semibold border border-transparent transition bg-black text-white shadow-lg z-[100]" @if($bookingMode === 'OTA_REDIRECT') target="_blank" rel="noopener" @endif>BOOK ONLINE</a>
 
     @include('public.partials.whatsapp-button')
     @include('public.partials.schema')

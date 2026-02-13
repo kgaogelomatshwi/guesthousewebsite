@@ -98,6 +98,7 @@
                 <label>Booking.com URL</label>
                 <input type="text" name="bookingcom_url" value="{{ $settings['bookingcom_url'] ?? '' }}">
                 <small>Use placeholders: <code>{check_in}</code>, <code>{check_out}</code>, <code>{adults}</code>, <code>{children}</code>, <code>{rooms}</code>, <code>{guests}</code>.</small>
+                <small>Example: <code>https://www.booking.com/hotel/za/your-property.html?checkin={check_in}&checkout={check_out}&group_adults={adults}&group_children={children}&no_rooms={rooms}</code></small>
             </div>
             <div class="grid gap-2 md:col-span-2">
                 <label>Airbnb URL</label>

@@ -20,6 +20,8 @@ class BookingController extends Controller
 {
     public function store(Request $request, SettingsService $settings, PaymentGatewayManager $gatewayManager): RedirectResponse
     {
+        $user = $request->user();
+
         $data = $request->validate([
             'guest_name' => ['required', 'string', 'max:150'],
             'email' => ['required', 'email', 'max:150'],
@@ -35,6 +37,10 @@ class BookingController extends Controller
 
         if (empty($data['guests'])) {
             $data['guests'] = max(1, (int) ($data['adults'] ?? 0) + (int) ($data['children'] ?? 0));
+        }
+
+        if ($user) {
+            $data['email'] = $user->email;
         }
 
         $room = null;
@@ -71,6 +77,7 @@ class BookingController extends Controller
             'currency' => $currency,
             'notes' => $data['notes'] ?? null,
             'source' => 'direct',
+            'created_by' => $user?->id,
         ]);
 
         $adminEmail = $settings->get('email');
@@ -129,13 +136,20 @@ class BookingController extends Controller
         ]);
 
         if ($url === $baseUrl) {
-            $query = http_build_query([
-                'check_in' => $checkIn,
-                'check_out' => $checkOut,
-                'adults' => $adults,
-                'children' => $children,
-                'rooms' => $rooms,
-            ]);
+            $query = $platform === 'bookingcom'
+                ? http_build_query([
+                    'checkin' => $checkIn,
+                    'checkout' => $checkOut,
+                    'group_adults' => $adults,
+                    'group_children' => $children,
+                    'no_rooms' => $rooms,
+                ])
+                : http_build_query([
+                    'check_in' => $checkIn,
+                    'check_out' => $checkOut,
+                    'adults' => $adults,
+                    'children' => $children,
+                ]);
             $url = $baseUrl . (str_contains($baseUrl, '?') ? '&' : '?') . $query;
         }
 

@@ -93,11 +93,11 @@ class BookingController extends Controller
             ]);
         }
 
-        $csv = implode(\"\\n\", $lines);
+        $csv = implode("\n", $lines);
 
         return response($csv, 200, [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=\"bookings.csv\"',
+            'Content-Disposition' => 'attachment; filename="bookings.csv"',
         ]);
     }
 
@@ -115,7 +115,7 @@ class BookingController extends Controller
     private function escape(?string $value): string
     {
         $value = (string) $value;
-        $value = str_replace('\"', '\"\"', $value);
-        return '\"' . $value . '\"';
+        $value = str_replace('"', '""', $value);
+        return '"' . $value . '"';
     }
 }

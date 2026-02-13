@@ -28,7 +28,14 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard'));
+        $user = $request->user();
+        $isAdminUser = $user?->hasRole('admin') || $user?->hasRole('editor');
+
+        if ($isAdminUser) {
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
+        return redirect()->intended(route('guest.dashboard'));
     }
 
     public function destroy(Request $request): RedirectResponse

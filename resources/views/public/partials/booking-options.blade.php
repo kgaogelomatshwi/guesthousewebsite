@@ -2,7 +2,15 @@
     $mode = $siteSettings['booking_mode'] ?? 'DIRECT_BOOKING';
     $bookingCom = $siteSettings['bookingcom_url'] ?? null;
     $airbnb = $siteSettings['airbnb_url'] ?? null;
-    $directEnabled = ($siteSettings['direct_booking_enabled'] ?? true);
+    $otaMode = $siteSettings['ota_mode'] ?? 'both';
+
+    if ($otaMode === 'bookingcom') {
+        $airbnb = null;
+    } elseif ($otaMode === 'airbnb') {
+        $bookingCom = null;
+    }
+
+    $defaultOtaUrl = $bookingCom ?: $airbnb;
 @endphp
 
 <div class="grid gap-6">
@@ -13,24 +21,22 @@
         <x-alert type="error">{{ session('error') }}</x-alert>
     @endif
     @if($mode === 'OTA_REDIRECT')
-        <div class="grid gap-6 md:grid-cols-2">
-            <div>
-                <h3 class="text-xl font-semibold">Book on your preferred platform</h3>
-                <p class="text-neutral-600">Choose your dates and guests, then we will redirect you to Booking.com or Airbnb.</p>
-                @include('public.partials.ota-redirect-form')
+        @if($defaultOtaUrl)
+            <div class="grid gap-3">
+                <p class="text-neutral-700">Redirecting to your OTA booking page...</p>
+                <a class="btn btn-primary w-fit" href="{{ $defaultOtaUrl }}" target="_blank" rel="noopener">Continue to OTA</a>
             </div>
-            <div>
-                <h3 class="text-xl font-semibold">Already booked?</h3>
-                @include('public.partials.external-booking-form')
-            </div>
-        </div>
+            <script>
+                window.location.href = @json($defaultOtaUrl);
+            </script>
+        @else
+            <x-alert type="error">OTA link is not configured yet.</x-alert>
+        @endif
     @elseif($mode === 'HYBRID')
         <div class="grid gap-6 md:grid-cols-2">
             <div>
                 <h3 class="text-xl font-semibold">Book Direct (Best Price)</h3>
-                @if($directEnabled)
-                    @include('public.partials.booking-direct-form', ['rooms' => $rooms ?? []])
-                @endif
+                @include('public.partials.booking-direct-form', ['rooms' => $rooms ?? []])
             </div>
             <div>
                 <h3 class="text-xl font-semibold">Prefer Booking.com or Airbnb?</h3>

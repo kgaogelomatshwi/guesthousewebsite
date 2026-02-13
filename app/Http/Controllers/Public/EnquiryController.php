@@ -16,8 +16,17 @@ use Illuminate\View\View;
 
 class EnquiryController extends Controller
 {
-    public function create(): View
+    public function create(SettingsService $settings): View|RedirectResponse
     {
+        if (($settings->get('booking_mode', 'DIRECT_BOOKING')) === 'OTA_REDIRECT') {
+            $otaUrl = $this->resolveDefaultOtaUrl($settings);
+            if ($otaUrl) {
+                return redirect()->away($otaUrl);
+            }
+
+            return redirect()->route('home')->with('error', 'OTA link is not configured yet.');
+        }
+
         $page = Page::query()
             ->where('key', 'booking')
             ->where('is_active', true)
@@ -61,5 +70,22 @@ class EnquiryController extends Controller
     public function thankYou(): View
     {
         return view('public.pages.thank-you');
+    }
+
+    private function resolveDefaultOtaUrl(SettingsService $settings): ?string
+    {
+        $otaMode = $settings->get('ota_mode', 'both');
+        $bookingCom = $settings->get('bookingcom_url');
+        $airbnb = $settings->get('airbnb_url');
+
+        if ($otaMode === 'bookingcom') {
+            return $bookingCom ?: null;
+        }
+
+        if ($otaMode === 'airbnb') {
+            return $airbnb ?: null;
+        }
+
+        return $bookingCom ?: ($airbnb ?: null);
     }
 }
