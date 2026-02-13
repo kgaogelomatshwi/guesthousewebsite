@@ -49,19 +49,46 @@ class PageSeeder extends Seeder
                 ->where('type', 'hero')
                 ->update(['is_active' => false]);
 
+            PageSection::where('page_id', $home->id)
+                ->where('type', 'hero_booking')
+                ->update(['is_active' => false]);
+
             PageSection::updateOrCreate([
                 'page_id' => $home->id,
-                'type' => 'hero_booking',
+                'type' => 'hero_slider',
                 'position' => 1,
             ], [
                 'content_json' => json_encode([
-                    'title' => 'Tranquil Countryside Escape in Limpopo',
-                    'subtitle' => 'Warm hospitality, fresh air, and value-for-money rooms for families and couples.',
-                    'background_image' => 'https://cdn.pixabay.com/photo/2018/07/23/01/03/landscape-3555890_1280.jpg',
-                    'button_label' => 'Book Online',
-                    'button_url' => '/booking',
-                    'secondary_button_label' => 'View Rooms',
-                    'secondary_button_url' => '/rooms',
+                    'show_booking_form' => true,
+                    'slides' => [
+                        [
+                            'title' => 'Tranquil Countryside Escape in Limpopo',
+                            'subtitle' => 'Warm hospitality, fresh air, and value-for-money rooms for families and couples.',
+                            'image' => 'https://cdn.pixabay.com/photo/2018/07/23/01/03/landscape-3555890_1280.jpg',
+                            'button_label' => 'Book Online',
+                            'button_url' => '/booking',
+                            'secondary_button_label' => 'View Rooms',
+                            'secondary_button_url' => '/rooms',
+                        ],
+                        [
+                            'title' => 'Comfortable Rooms. Honest Value.',
+                            'subtitle' => 'Self-catering options, secure parking, and peaceful surroundings.',
+                            'image' => 'https://cdn.pixabay.com/photo/2016/11/29/03/53/architecture-1868265_1280.jpg',
+                            'button_label' => 'Check Availability',
+                            'button_url' => '/booking',
+                            'secondary_button_label' => 'Explore Services',
+                            'secondary_button_url' => '/services',
+                        ],
+                        [
+                            'title' => 'Relax, Unwind, and Breathe',
+                            'subtitle' => 'A calm base for families, couples, and business travelers.',
+                            'image' => 'https://cdn.pixabay.com/photo/2015/10/12/14/54/hotel-983280_1280.jpg',
+                            'button_label' => 'Book Online',
+                            'button_url' => '/booking',
+                            'secondary_button_label' => 'Contact Us',
+                            'secondary_button_url' => '/contact',
+                        ],
+                    ],
                 ]),
                 'is_active' => true,
             ]);
