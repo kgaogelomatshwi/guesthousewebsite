@@ -385,11 +385,11 @@
     }
 
     .hero-controls {
-        @apply absolute inset-y-0 left-0 right-0 flex items-center justify-between px-6 z-20 pointer-events-none;
+        @apply absolute top-6 right-6 flex items-center gap-2 z-20;
     }
 
     .hero-nav {
-        @apply pointer-events-auto h-11 w-11 rounded-full bg-white/85 text-black font-bold shadow-lg transition;
+        @apply h-10 w-10 rounded-full bg-white/90 text-black font-bold shadow-lg transition;
     }
 
     .hero-nav:hover {
@@ -397,7 +397,7 @@
     }
 
     .hero-dots {
-        @apply absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20;
+        @apply absolute top-20 right-6 flex items-center gap-2 z-20;
     }
 
     .hero-dot {
@@ -523,6 +523,16 @@
 
         .booking-bar form {
             grid-template-columns: 1fr;
+        }
+
+        .hero-controls {
+            top: 0.75rem;
+            right: 0.75rem;
+        }
+
+        .hero-dots {
+            top: 3.25rem;
+            right: 0.75rem;
         }
     }
 }
