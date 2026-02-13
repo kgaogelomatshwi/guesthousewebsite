@@ -101,6 +101,7 @@ Route::prefix('admin')
         Route::resource('rates', AdminRateController::class)->except(['show']);
         Route::resource('gallery', AdminGalleryController::class)->except(['show']);
         Route::resource('media', AdminMediaController::class)->only(['index', 'store', 'destroy']);
+        Route::get('media-picker', [AdminMediaController::class, 'picker'])->name('media.picker');
         Route::post('gallery/{gallery}/images', [AdminGalleryController::class, 'storeImage'])->name('gallery.images.store');
         Route::delete('gallery/images/{image}', [AdminGalleryController::class, 'destroyImage'])->name('gallery.images.destroy');
         Route::resource('attractions', AdminAttractionController::class)->except(['show']);

@@ -77,6 +77,18 @@
     <label>Room Images</label>
     <input type="file" name="images[]" multiple>
 </div>
+@if(!empty($media))
+    <div class="form-row">
+        <label>Add Existing Images from Media Library</label>
+        <select id="room-existing-images" name="existing_images[]" multiple size="6">
+            @foreach($media as $item)
+                <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+            @endforeach
+        </select>
+        <button class="btn btn-outline js-media-open" type="button" data-media-target="room-existing-images" data-media-type="image">Pick from Media Library</button>
+        <small>Hold Ctrl/Cmd to select multiple images.</small>
+    </div>
+@endif
 
 @if($room->images && $room->images->count())
     <div class="grid-4">

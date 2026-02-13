@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\GalleryCategory;
 use App\Models\GalleryImage;
+use App\Services\Media\MediaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -39,7 +40,14 @@ class GalleryController extends Controller
     {
         $gallery->load('images');
 
-        return view('admin.gallery.edit', ['category' => $gallery]);
+        return view('admin.gallery.edit', [
+            'category' => $gallery,
+            'media' => \App\Models\Media::query()
+                ->where('mime_type', 'like', 'image/%')
+                ->orderByDesc('created_at')
+                ->take(200)
+                ->get(),
+        ]);
     }
 
     public function update(Request $request, GalleryCategory $gallery): RedirectResponse
@@ -61,16 +69,29 @@ class GalleryController extends Controller
         return redirect()->route('admin.gallery.index')->with('success', 'Category deleted.');
     }
 
-    public function storeImage(Request $request, GalleryCategory $gallery): RedirectResponse
+    public function storeImage(Request $request, GalleryCategory $gallery, MediaService $mediaService): RedirectResponse
     {
         $data = $request->validate([
-            'images' => ['required', 'array'],
-            'images.*' => ['image', 'max:5120'],
+            'images' => ['nullable', 'array'],
+            'images.*' => ['file', 'mimetypes:image/*', 'max:5120'],
+            'existing_images' => ['nullable', 'array'],
+            'existing_images.*' => ['string', 'max:255'],
         ]);
 
         $position = $gallery->images()->max('position') ?? 0;
-        foreach ($data['images'] as $image) {
-            $path = $image->store('gallery', 'public');
+        foreach (($data['existing_images'] ?? []) as $path) {
+            if (! $path) {
+                continue;
+            }
+            GalleryImage::create([
+                'category_id' => $gallery->id,
+                'path' => $path,
+                'position' => ++$position,
+            ]);
+        }
+
+        foreach (($data['images'] ?? []) as $image) {
+            $path = $mediaService->store($image, 'gallery');
             GalleryImage::create([
                 'category_id' => $gallery->id,
                 'path' => $path,

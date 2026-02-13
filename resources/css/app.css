@@ -16,6 +16,9 @@
 }
 
 @layer components {
+    .container {
+        @apply w-full max-w-[1200px] mx-auto px-6;
+    }
     .section {
         @apply py-16;
     }

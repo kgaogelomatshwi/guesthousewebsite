@@ -27,6 +27,19 @@
             <label>Cover Image</label>
             <input type="file" name="cover_image">
         </div>
+        @if(!empty($media))
+            <div class="form-row">
+                <label>Or Select from Media Library</label>
+                <select class="js-media-picker" data-target="blog-cover-path">
+                    <option value="">Choose media</option>
+                    @foreach($media as $item)
+                        <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                    @endforeach
+                </select>
+                <input id="blog-cover-path" type="text" name="cover_image_existing" value="{{ old('cover_image_existing', $post->cover_image) }}">
+                <button class="btn btn-outline js-media-open" type="button" data-media-target="blog-cover-path" data-media-type="image">Pick from Media Library</button>
+            </div>
+        @endif
         <div class="grid-2">
             <div class="form-row">
                 <label>Category</label>

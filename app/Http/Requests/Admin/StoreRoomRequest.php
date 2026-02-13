@@ -38,6 +38,8 @@ class StoreRoomRequest extends FormRequest
             'amenities.*' => ['integer', 'exists:amenities,id'],
             'images' => ['nullable', 'array'],
             'images.*' => ['file', 'image', 'max:5120'],
+            'existing_images' => ['nullable', 'array'],
+            'existing_images.*' => ['string', 'max:255'],
         ];
     }
 }

@@ -24,8 +24,20 @@
     <form class="form" method="post" action="{{ route('admin.gallery.images.store', $category) }}" enctype="multipart/form-data">
         @csrf
         <div class="form-row">
-            <input type="file" name="images[]" multiple required>
+            <input type="file" name="images[]" multiple>
         </div>
+        @if(!empty($media))
+            <div class="form-row">
+                <label>Or Add from Media Library</label>
+                <select id="gallery-existing-images" name="existing_images[]" multiple size="6">
+                    @foreach($media as $item)
+                        <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                    @endforeach
+                </select>
+                <button class="btn btn-outline js-media-open" type="button" data-media-target="gallery-existing-images" data-media-type="image">Pick from Media Library</button>
+                <small>Hold Ctrl/Cmd to select multiple images.</small>
+            </div>
+        @endif
         <button class="btn btn-primary" type="submit">Upload</button>
     </form>
 

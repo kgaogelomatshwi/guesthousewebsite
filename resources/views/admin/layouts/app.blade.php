@@ -62,5 +62,38 @@
             </main>
         </div>
     </div>
+
+    <div id="media-picker-modal" class="fixed inset-0 hidden z-[200]">
+        <div class="absolute inset-0 bg-black/60" data-media-close></div>
+        <div class="relative mx-auto my-8 w-[min(1100px,92%)] bg-white rounded-2xl shadow-2xl p-6 max-h-[85vh] overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold">Media Library</h3>
+                    <p class="text-sm text-neutral-500">Pick a file to insert into your field.</p>
+                </div>
+                <button class="btn btn-ghost" type="button" data-media-close>Close</button>
+            </div>
+            <div class="grid gap-3 mt-4 md:grid-cols-3">
+                <div class="md:col-span-2 flex flex-wrap gap-2 items-center">
+                    <button class="btn btn-outline" type="button" data-media-filter="all">All</button>
+                    <button class="btn btn-outline" type="button" data-media-filter="image">Images</button>
+                    <button class="btn btn-outline" type="button" data-media-filter="video">Video</button>
+                    <button class="btn btn-outline" type="button" data-media-filter="audio">Audio</button>
+                    <button class="btn btn-outline" type="button" data-media-filter="pdf">PDF</button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm text-neutral-600">Insert</label>
+                    <label class="text-sm"><input type="radio" name="media-insert-mode" value="path" checked> Path</label>
+                    <label class="text-sm"><input type="radio" name="media-insert-mode" value="url"> URL</label>
+                </div>
+            </div>
+            <div class="mt-3">
+                <input id="media-picker-search" class="w-full" type="text" placeholder="Search media...">
+            </div>
+            <div class="mt-4 overflow-auto">
+                <div id="media-picker-grid" class="media-grid"></div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

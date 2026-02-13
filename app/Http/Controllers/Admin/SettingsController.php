@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\Media\MediaService;
 use App\Models\Setting;
 use App\Services\SettingsService;
 use Illuminate\Http\RedirectResponse;
@@ -15,15 +16,22 @@ class SettingsController extends Controller
     {
         return view('admin.settings.edit', [
             'settings' => $settings->all(),
+            'media' => \App\Models\Media::query()
+                ->where('mime_type', 'like', 'image/%')
+                ->orderByDesc('created_at')
+                ->take(200)
+                ->get(),
         ]);
     }
 
-    public function update(Request $request, SettingsService $settings): RedirectResponse
+    public function update(Request $request, SettingsService $settings, MediaService $mediaService): RedirectResponse
     {
         $data = $request->validate([
             'site_name' => ['nullable', 'string', 'max:150'],
             'logo' => ['nullable', 'image', 'max:4096'],
             'favicon' => ['nullable', 'image', 'max:2048'],
+            'logo_path' => ['nullable', 'string', 'max:255'],
+            'favicon_path' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'whatsapp' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:150'],
@@ -54,14 +62,18 @@ class SettingsController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            $path = $request->file('logo')->store('branding', 'public');
-            $data['logo'] = $path;
+            $data['logo'] = $mediaService->store($request->file('logo'), 'branding');
+        } elseif (!empty($data['logo_path'])) {
+            $data['logo'] = $data['logo_path'];
         }
 
         if ($request->hasFile('favicon')) {
-            $path = $request->file('favicon')->store('branding', 'public');
-            $data['favicon'] = $path;
+            $data['favicon'] = $mediaService->store($request->file('favicon'), 'branding');
+        } elseif (!empty($data['favicon_path'])) {
+            $data['favicon'] = $data['favicon_path'];
         }
+
+        unset($data['logo_path'], $data['favicon_path']);
 
         foreach ($data as $key => $value) {
             $type = in_array($key, ['direct_booking_enabled', 'google_reviews_enabled'], true) ? 'boolean' : null;

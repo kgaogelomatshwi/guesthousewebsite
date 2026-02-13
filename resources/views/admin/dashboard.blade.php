@@ -50,4 +50,31 @@
         @endforeach
         </tbody>
     </table>
+
+    <div class="grid-2 mt-8">
+        <x-card>
+            <div class="card-body">
+                <h3>Top Pages (30 days)</h3>
+                <ul class="list-disc pl-5">
+                    @forelse($topPages as $row)
+                        <li>{{ $row->path }} — {{ $row->total }}</li>
+                    @empty
+                        <li>No data yet.</li>
+                    @endforelse
+                </ul>
+            </div>
+        </x-card>
+        <x-card>
+            <div class="card-body">
+                <h3>Top Referrers (30 days)</h3>
+                <ul class="list-disc pl-5">
+                    @forelse($topReferrers as $row)
+                        <li>{{ $row->referrer }} — {{ $row->total }}</li>
+                    @empty
+                        <li>No data yet.</li>
+                    @endforelse
+                </ul>
+            </div>
+        </x-card>
+    </div>
 @endsection

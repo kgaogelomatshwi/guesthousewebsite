@@ -19,6 +19,19 @@
             <label>Image</label>
             <input type="file" name="image_path">
         </div>
+        @if(!empty($media))
+            <div class="form-row">
+                <label>Or Select from Media Library</label>
+                <select class="js-media-picker" data-target="attraction-image-path">
+                    <option value="">Choose media</option>
+                    @foreach($media as $item)
+                        <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                    @endforeach
+                </select>
+                <input id="attraction-image-path" type="text" name="image_path_existing" value="{{ old('image_path_existing', $attraction->image_path) }}">
+                <button class="btn btn-outline js-media-open" type="button" data-media-target="attraction-image-path" data-media-type="image">Pick from Media Library</button>
+            </div>
+        @endif
         <div class="grid-2">
             <div class="form-row">
                 <label>Distance (km)</label>

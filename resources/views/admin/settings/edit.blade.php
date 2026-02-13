@@ -23,10 +23,38 @@
                 <label>Logo</label>
                 <input type="file" name="logo">
             </div>
+            @if(!empty($media))
+                <div class="grid gap-2">
+                    <label>Select Logo from Media Library</label>
+                    <select class="js-media-picker" data-target="logo-path">
+                        <option value="">Choose media</option>
+                        @foreach($media as $item)
+                            <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                        @endforeach
+                    </select>
+                    <input id="logo-path" type="text" name="logo_path" value="{{ old('logo_path', $settings['logo'] ?? '') }}">
+                    <button class="btn btn-outline js-media-open" type="button" data-media-target="logo-path" data-media-type="image">Pick from Media Library</button>
+                    <small>Use a media path (storage).</small>
+                </div>
+            @endif
             <div class="grid gap-2">
                 <label>Favicon</label>
                 <input type="file" name="favicon">
             </div>
+            @if(!empty($media))
+                <div class="grid gap-2">
+                    <label>Select Favicon from Media Library</label>
+                    <select class="js-media-picker" data-target="favicon-path">
+                        <option value="">Choose media</option>
+                        @foreach($media as $item)
+                            <option value="{{ $item->path }}">{{ $item->title ?? $item->path }}</option>
+                        @endforeach
+                    </select>
+                    <input id="favicon-path" type="text" name="favicon_path" value="{{ old('favicon_path', $settings['favicon'] ?? '') }}">
+                    <button class="btn btn-outline js-media-open" type="button" data-media-target="favicon-path" data-media-type="image">Pick from Media Library</button>
+                    <small>Use a media path (storage).</small>
+                </div>
+            @endif
             <div class="grid gap-2">
                 <label>Phone</label>
                 <input type="text" name="phone" value="{{ $settings['phone'] ?? '' }}">

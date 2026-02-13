@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreRoomRequest;
 use App\Models\Amenity;
 use App\Models\Room;
 use App\Models\RoomImage;
+use App\Services\Media\MediaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -23,17 +24,24 @@ class RoomController extends Controller
     {
         $amenities = Amenity::orderBy('name')->get();
 
-        return view('admin.rooms.create', compact('amenities'));
+        return view('admin.rooms.create', [
+            'amenities' => $amenities,
+            'media' => \App\Models\Media::query()
+                ->where('mime_type', 'like', 'image/%')
+                ->orderByDesc('created_at')
+                ->take(200)
+                ->get(),
+        ]);
     }
 
-    public function store(StoreRoomRequest $request): RedirectResponse
+    public function store(StoreRoomRequest $request, MediaService $mediaService): RedirectResponse
     {
         $data = $request->validated();
 
         $room = Room::create($data);
         $room->amenities()->sync($data['amenities'] ?? []);
 
-        $this->storeImages($room, $request);
+        $this->storeImages($room, $request, $mediaService);
 
         return redirect()->route('admin.rooms.edit', $room)->with('success', 'Room created.');
     }
@@ -43,17 +51,25 @@ class RoomController extends Controller
         $amenities = Amenity::orderBy('name')->get();
         $room->load('images', 'amenities');
 
-        return view('admin.rooms.edit', compact('room', 'amenities'));
+        return view('admin.rooms.edit', [
+            'room' => $room,
+            'amenities' => $amenities,
+            'media' => \App\Models\Media::query()
+                ->where('mime_type', 'like', 'image/%')
+                ->orderByDesc('created_at')
+                ->take(200)
+                ->get(),
+        ]);
     }
 
-    public function update(StoreRoomRequest $request, Room $room): RedirectResponse
+    public function update(StoreRoomRequest $request, Room $room, MediaService $mediaService): RedirectResponse
     {
         $data = $request->validated();
 
         $room->update($data);
         $room->amenities()->sync($data['amenities'] ?? []);
 
-        $this->storeImages($room, $request);
+        $this->storeImages($room, $request, $mediaService);
 
         return back()->with('success', 'Room updated.');
     }
@@ -65,21 +81,31 @@ class RoomController extends Controller
         return redirect()->route('admin.rooms.index')->with('success', 'Room deleted.');
     }
 
-    private function storeImages(Room $room, StoreRoomRequest $request): void
+    private function storeImages(Room $room, StoreRoomRequest $request, MediaService $mediaService): void
     {
-        if (! $request->hasFile('images')) {
-            return;
-        }
-
         $position = $room->images()->max('position') ?? 0;
 
-        foreach ($request->file('images') as $image) {
-            $path = $image->store('rooms', 'public');
+        $existing = $request->input('existing_images', []);
+        foreach ($existing as $path) {
+            if (! $path) {
+                continue;
+            }
             RoomImage::create([
                 'room_id' => $room->id,
                 'path' => $path,
                 'position' => ++$position,
             ]);
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $mediaService->store($image, 'rooms');
+                RoomImage::create([
+                    'room_id' => $room->id,
+                    'path' => $path,
+                    'position' => ++$position,
+                ]);
+            }
         }
     }
 }

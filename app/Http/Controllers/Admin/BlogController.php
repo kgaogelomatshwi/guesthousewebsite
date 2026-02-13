@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BlogCategory;
 use App\Models\BlogPost;
 use App\Models\BlogTag;
+use App\Services\Media\MediaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -24,17 +25,25 @@ class BlogController extends Controller
     {
         $categories = BlogCategory::orderBy('name')->get();
 
-        return view('admin.blog.create', compact('categories'));
+        return view('admin.blog.create', [
+            'categories' => $categories,
+            'media' => \App\Models\Media::query()
+                ->where('mime_type', 'like', 'image/%')
+                ->orderByDesc('created_at')
+                ->take(200)
+                ->get(),
+        ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, MediaService $mediaService): RedirectResponse
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:150'],
             'excerpt' => ['nullable', 'string'],
             'body' => ['required', 'string'],
-            'cover_image' => ['nullable', 'image', 'max:5120'],
+            'cover_image' => ['nullable', 'file', 'mimetypes:image/*', 'max:5120'],
+            'cover_image_existing' => ['nullable', 'string', 'max:255'],
             'category_id' => ['nullable', 'exists:blog_categories,id'],
             'seo_title' => ['nullable', 'string', 'max:160'],
             'seo_description' => ['nullable', 'string', 'max:255'],
@@ -44,8 +53,11 @@ class BlogController extends Controller
         ]);
 
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('blog', 'public');
+            $data['cover_image'] = $mediaService->store($request->file('cover_image'), 'blog');
+        } elseif (!empty($data['cover_image_existing'])) {
+            $data['cover_image'] = $data['cover_image_existing'];
         }
+        unset($data['cover_image_existing']);
 
         $data['user_id'] = $request->user()->id;
 
@@ -60,17 +72,26 @@ class BlogController extends Controller
         $categories = BlogCategory::orderBy('name')->get();
         $blog->load('tags');
 
-        return view('admin.blog.edit', ['post' => $blog, 'categories' => $categories]);
+        return view('admin.blog.edit', [
+            'post' => $blog,
+            'categories' => $categories,
+            'media' => \App\Models\Media::query()
+                ->where('mime_type', 'like', 'image/%')
+                ->orderByDesc('created_at')
+                ->take(200)
+                ->get(),
+        ]);
     }
 
-    public function update(Request $request, BlogPost $blog): RedirectResponse
+    public function update(Request $request, BlogPost $blog, MediaService $mediaService): RedirectResponse
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:150'],
             'excerpt' => ['nullable', 'string'],
             'body' => ['required', 'string'],
-            'cover_image' => ['nullable', 'image', 'max:5120'],
+            'cover_image' => ['nullable', 'file', 'mimetypes:image/*', 'max:5120'],
+            'cover_image_existing' => ['nullable', 'string', 'max:255'],
             'category_id' => ['nullable', 'exists:blog_categories,id'],
             'seo_title' => ['nullable', 'string', 'max:160'],
             'seo_description' => ['nullable', 'string', 'max:255'],
@@ -80,8 +101,11 @@ class BlogController extends Controller
         ]);
 
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('blog', 'public');
+            $data['cover_image'] = $mediaService->store($request->file('cover_image'), 'blog');
+        } elseif (!empty($data['cover_image_existing'])) {
+            $data['cover_image'] = $data['cover_image_existing'];
         }
+        unset($data['cover_image_existing']);
 
         $blog->update($data);
         $this->syncTags($blog, $data['tags'] ?? null);

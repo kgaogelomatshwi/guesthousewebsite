@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attraction;
+use App\Services\Media\MediaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -19,15 +20,22 @@ class AttractionController extends Controller
 
     public function create(): View
     {
-        return view('admin.attractions.create');
+        return view('admin.attractions.create', [
+            'media' => \App\Models\Media::query()
+                ->where('mime_type', 'like', 'image/%')
+                ->orderByDesc('created_at')
+                ->take(200)
+                ->get(),
+        ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, MediaService $mediaService): RedirectResponse
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:150'],
-            'image_path' => ['nullable', 'image', 'max:4096'],
+            'image_path' => ['nullable', 'file', 'mimetypes:image/*', 'max:4096'],
+            'image_path_existing' => ['nullable', 'string', 'max:255'],
             'distance_km' => ['nullable', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
             'link' => ['nullable', 'url'],
@@ -36,8 +44,12 @@ class AttractionController extends Controller
         ]);
 
         if ($request->hasFile('image_path')) {
-            $data['image_path'] = $request->file('image_path')->store('attractions', 'public');
+            $data['image_path'] = $mediaService->store($request->file('image_path'), 'attractions');
+        } elseif (!empty($data['image_path_existing'])) {
+            $data['image_path'] = $data['image_path_existing'];
         }
+
+        unset($data['image_path_existing']);
 
         Attraction::create($data);
 
@@ -46,15 +58,23 @@ class AttractionController extends Controller
 
     public function edit(Attraction $attraction): View
     {
-        return view('admin.attractions.edit', compact('attraction'));
+        return view('admin.attractions.edit', [
+            'attraction' => $attraction,
+            'media' => \App\Models\Media::query()
+                ->where('mime_type', 'like', 'image/%')
+                ->orderByDesc('created_at')
+                ->take(200)
+                ->get(),
+        ]);
     }
 
-    public function update(Request $request, Attraction $attraction): RedirectResponse
+    public function update(Request $request, Attraction $attraction, MediaService $mediaService): RedirectResponse
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:150'],
-            'image_path' => ['nullable', 'image', 'max:4096'],
+            'image_path' => ['nullable', 'file', 'mimetypes:image/*', 'max:4096'],
+            'image_path_existing' => ['nullable', 'string', 'max:255'],
             'distance_km' => ['nullable', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
             'link' => ['nullable', 'url'],
@@ -63,8 +83,12 @@ class AttractionController extends Controller
         ]);
 
         if ($request->hasFile('image_path')) {
-            $data['image_path'] = $request->file('image_path')->store('attractions', 'public');
+            $data['image_path'] = $mediaService->store($request->file('image_path'), 'attractions');
+        } elseif (!empty($data['image_path_existing'])) {
+            $data['image_path'] = $data['image_path_existing'];
         }
+
+        unset($data['image_path_existing']);
 
         $attraction->update($data);
 

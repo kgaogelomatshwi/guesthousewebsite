@@ -37,6 +37,7 @@
     <div class="grid gap-2">
         <label>Background Image Path (storage)</label>
         <input id="section-background-image" type="text" name="content[background_image]" value="{{ $content['background_image'] ?? '' }}">
+        <button class="btn btn-outline js-media-open" type="button" data-media-target="section-background-image" data-media-type="image">Pick from Media Library</button>
         <small>Use Media Library to upload and copy URLs.</small>
         @if(!empty($media))
             <div class="media-picker">
@@ -84,6 +85,7 @@
     <div class="grid gap-2">
         <label>Background Image Path (storage)</label>
         <input id="section-hero-booking-bg" type="text" name="content[background_image]" value="{{ $content['background_image'] ?? '' }}">
+        <button class="btn btn-outline js-media-open" type="button" data-media-target="section-hero-booking-bg" data-media-type="image">Pick from Media Library</button>
         @if(!empty($media))
             <div class="media-picker">
                 <select class="js-media-picker" data-target="section-hero-booking-bg">
@@ -141,6 +143,7 @@
                     <div class="form-row">
                         <label>Image Path (storage)</label>
                         <input id="slide-image-{{ $index }}" type="text" name="content[slides][{{ $index }}][image]" value="{{ $slide['image'] ?? '' }}">
+                        <button class="btn btn-outline js-media-open" type="button" data-media-target="slide-image-{{ $index }}" data-media-type="image">Pick from Media Library</button>
                         @if(!empty($media))
                             <div class="media-picker">
                                 <select class="js-media-picker" data-target="slide-image-{{ $index }}">
@@ -198,6 +201,7 @@
             <div class="form-row">
                 <label>Image Path (storage)</label>
                 <input id="slide-image-__INDEX__" type="text" name="content[slides][__INDEX__][image]" value="">
+                <button class="btn btn-outline js-media-open" type="button" data-media-target="slide-image-__INDEX__" data-media-type="image">Pick from Media Library</button>
                 @if(!empty($media))
                     <div class="media-picker">
                         <select class="js-media-picker" data-target="slide-image-__INDEX__">
@@ -259,6 +263,7 @@
     <div class="grid gap-2">
         <label>Image Path (storage)</label>
         <input id="section-image" type="text" name="content[image]" value="{{ $content['image'] ?? '' }}">
+        <button class="btn btn-outline js-media-open" type="button" data-media-target="section-image" data-media-type="image">Pick from Media Library</button>
         <small>Use Media Library to upload and copy URLs.</small>
         @if(!empty($media))
             <div class="media-picker">
