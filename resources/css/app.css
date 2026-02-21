@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 @layer base {
@@ -655,14 +655,17 @@ body.rv-theme {
     --brand-2: #7c4dff;
     --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
     --radius: 18px;
+    --section-gap: 18px;
     --maxw: 1080px;
     --pad: clamp(16px, 3vw, 28px);
     --h1: clamp(32px, 4vw, 46px);
     --h2: clamp(22px, 2.6vw, 30px);
     --h3: clamp(18px, 2vw, 22px);
     --p: clamp(15px, 1.3vw, 16.5px);
+    --theme-font: 'Montserrat', sans-serif;
 
     margin: 0;
+    font-family: var(--theme-font);
     font-size: var(--p);
     line-height: 1.65;
     color: var(--text);
@@ -779,18 +782,18 @@ body.rv-theme .rv-main p {
 }
 
 /* Keep readable text inside white cards/blocks */
-body.rv-theme .rv-main .bg-white,
+body.rv-theme .rv-main .bg-white[class*="rounded"],
 body.rv-theme .rv-main .card,
 body.rv-theme .rv-main .contact-card,
 body.rv-theme .rv-main .table {
     color: #0f172a;
 }
 
-body.rv-theme .rv-main .bg-white h1,
-body.rv-theme .rv-main .bg-white h2,
-body.rv-theme .rv-main .bg-white h3,
-body.rv-theme .rv-main .bg-white h4,
-body.rv-theme .rv-main .bg-white h5,
+body.rv-theme .rv-main .bg-white[class*="rounded"] h1,
+body.rv-theme .rv-main .bg-white[class*="rounded"] h2,
+body.rv-theme .rv-main .bg-white[class*="rounded"] h3,
+body.rv-theme .rv-main .bg-white[class*="rounded"] h4,
+body.rv-theme .rv-main .bg-white[class*="rounded"] h5,
 body.rv-theme .rv-main .card h1,
 body.rv-theme .rv-main .card h2,
 body.rv-theme .rv-main .card h3,
@@ -799,13 +802,13 @@ body.rv-theme .rv-main .card h5 {
     color: #0f172a;
 }
 
-body.rv-theme .rv-main .bg-white p,
+body.rv-theme .rv-main .bg-white[class*="rounded"] p,
 body.rv-theme .rv-main .card p {
     color: #475569;
 }
 
 body.rv-theme .rv-main section {
-    margin-top: 18px;
+    margin-top: var(--section-gap);
     padding: var(--pad);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
     border: 1px solid var(--line);
@@ -815,7 +818,7 @@ body.rv-theme .rv-main section {
 }
 
 body.rv-theme .rv-main section + section {
-    margin-top: 18px;
+    margin-top: var(--section-gap);
 }
 
 body.rv-theme .rv-main article {
@@ -865,6 +868,14 @@ body.rv-theme .rv-main section[aria-labelledby="cta"] a {
     box-shadow: 0 14px 35px rgba(77, 208, 225, 0.2);
 }
 
+/* Also theme utility buttons that use hardcoded Tailwind black classes */
+body.rv-theme a.bg-black,
+body.rv-theme button.bg-black {
+    background: linear-gradient(135deg, var(--brand), var(--brand-2)) !important;
+    border-color: transparent !important;
+    color: #ffffff !important;
+}
+
 body.rv-theme .btn-outline {
     border-color: rgba(255, 255, 255, 0.3);
     color: var(--text);
@@ -874,7 +885,7 @@ body.rv-theme .btn-outline {
 body.rv-theme .site-footer {
     width: min(100% - (var(--pad) * 2), var(--maxw));
     margin-inline: auto;
-    margin-top: 18px;
+    margin-top: var(--section-gap);
     padding: var(--pad) 0 42px;
     border-top: 1px solid var(--line);
     background: transparent;
@@ -904,7 +915,7 @@ body.rv-theme a.fixed.bottom-4.right-4 {
     body.rv-theme .rv-main {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 18px;
+        gap: var(--section-gap);
     }
 }
 

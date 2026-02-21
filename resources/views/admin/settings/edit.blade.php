@@ -3,8 +3,24 @@
 @section('content')
     <h1 class="text-2xl font-semibold">Site Settings</h1>
 
+    @php
+        $hexOrDefault = static function (array $settings, string $key, string $default): string {
+            $value = trim((string) ($settings[$key] ?? ''));
+            return preg_match('/^#[0-9A-Fa-f]{6}$/', $value) ? strtolower($value) : $default;
+        };
+
+        $themeColorValues = [
+            'theme_bg' => $hexOrDefault($settings, 'theme_bg', '#0b1220'),
+            'theme_text' => $hexOrDefault($settings, 'theme_text', '#ebeff7'),
+            'theme_muted' => $hexOrDefault($settings, 'theme_muted', '#b4c0d0'),
+            'theme_brand' => $hexOrDefault($settings, 'theme_brand', '#4dd0e1'),
+            'theme_brand_2' => $hexOrDefault($settings, 'theme_brand_2', '#7c4dff'),
+        ];
+    @endphp
+
     <div class="flex flex-wrap gap-2 mt-4">
         <button type="button" class="btn btn-outline" data-tab-button="general">General</button>
+        <button type="button" class="btn btn-outline" data-tab-button="theme">Theme</button>
         <button type="button" class="btn btn-outline" data-tab-button="booking">Booking</button>
         <button type="button" class="btn btn-outline" data-tab-button="seo">SEO + Integrations</button>
         <button type="button" class="btn btn-outline" data-tab-button="reviews">Reviews</button>
@@ -18,6 +34,14 @@
             <div class="grid gap-2">
                 <label>Site Name</label>
                 <input type="text" name="site_name" value="{{ $settings['site_name'] ?? '' }}">
+            </div>
+            <div class="grid gap-2">
+                <label>Site Tagline</label>
+                <input type="text" name="site_tagline" value="{{ $settings['site_tagline'] ?? '' }}">
+            </div>
+            <div class="grid gap-2 md:col-span-2">
+                <label>Site Intro</label>
+                <textarea name="site_intro" rows="3">{{ $settings['site_intro'] ?? '' }}</textarea>
             </div>
             <div class="grid gap-2">
                 <label>Logo</label>
@@ -74,6 +98,117 @@
             <div class="grid gap-2 md:col-span-2">
                 <label>Social Links (one per line)</label>
                 <textarea name="social_links" rows="3">{{ is_array($settings['social_links'] ?? null) ? implode("\n", $settings['social_links']) : '' }}</textarea>
+            </div>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2 hidden" data-tab-panel="theme">
+            <div class="grid gap-2">
+                <label>Background Color</label>
+                <div class="flex items-center gap-3">
+                    <input type="color" name="theme_bg" value="{{ old('theme_bg', $themeColorValues['theme_bg']) }}" data-theme-input data-color-input>
+                    <span class="inline-flex items-center gap-2 text-sm text-neutral-600">
+                        <span class="h-4 w-4 rounded border border-black/20" data-color-chip-for="theme_bg"></span>
+                        <code data-color-value-for="theme_bg">{{ old('theme_bg', $themeColorValues['theme_bg']) }}</code>
+                    </span>
+                </div>
+            </div>
+            <div class="grid gap-2">
+                <label>Text Color</label>
+                <div class="flex items-center gap-3">
+                    <input type="color" name="theme_text" value="{{ old('theme_text', $themeColorValues['theme_text']) }}" data-theme-input data-color-input>
+                    <span class="inline-flex items-center gap-2 text-sm text-neutral-600">
+                        <span class="h-4 w-4 rounded border border-black/20" data-color-chip-for="theme_text"></span>
+                        <code data-color-value-for="theme_text">{{ old('theme_text', $themeColorValues['theme_text']) }}</code>
+                    </span>
+                </div>
+            </div>
+            <div class="grid gap-2">
+                <label>Muted Text Color</label>
+                <div class="flex items-center gap-3">
+                    <input type="color" name="theme_muted" value="{{ old('theme_muted', $themeColorValues['theme_muted']) }}" data-theme-input data-color-input>
+                    <span class="inline-flex items-center gap-2 text-sm text-neutral-600">
+                        <span class="h-4 w-4 rounded border border-black/20" data-color-chip-for="theme_muted"></span>
+                        <code data-color-value-for="theme_muted">{{ old('theme_muted', $themeColorValues['theme_muted']) }}</code>
+                    </span>
+                </div>
+            </div>
+            <div class="grid gap-2">
+                <label>Accent Color 1</label>
+                <div class="flex items-center gap-3">
+                    <input type="color" name="theme_brand" value="{{ old('theme_brand', $themeColorValues['theme_brand']) }}" data-theme-input data-color-input>
+                    <span class="inline-flex items-center gap-2 text-sm text-neutral-600">
+                        <span class="h-4 w-4 rounded border border-black/20" data-color-chip-for="theme_brand"></span>
+                        <code data-color-value-for="theme_brand">{{ old('theme_brand', $themeColorValues['theme_brand']) }}</code>
+                    </span>
+                </div>
+            </div>
+            <div class="grid gap-2">
+                <label>Accent Color 2</label>
+                <div class="flex items-center gap-3">
+                    <input type="color" name="theme_brand_2" value="{{ old('theme_brand_2', $themeColorValues['theme_brand_2']) }}" data-theme-input data-color-input>
+                    <span class="inline-flex items-center gap-2 text-sm text-neutral-600">
+                        <span class="h-4 w-4 rounded border border-black/20" data-color-chip-for="theme_brand_2"></span>
+                        <code data-color-value-for="theme_brand_2">{{ old('theme_brand_2', $themeColorValues['theme_brand_2']) }}</code>
+                    </span>
+                </div>
+            </div>
+            <div class="grid gap-2">
+                <label>Card Radius (px)</label>
+                <input type="number" name="theme_radius" min="8" max="40" value="{{ $settings['theme_radius'] ?? 18 }}" data-theme-input>
+            </div>
+            <div class="grid gap-2">
+                <label>Site Max Width (px)</label>
+                <input type="number" name="theme_maxw" min="900" max="1600" value="{{ $settings['theme_maxw'] ?? 1080 }}" data-theme-input>
+            </div>
+            <div class="grid gap-2">
+                <label>Font Family</label>
+                <select name="theme_font" data-theme-input>
+                    @foreach([
+                        'montserrat' => 'Montserrat (Default)',
+                        'poppins' => 'Poppins',
+                        'nunito' => 'Nunito',
+                        'lato' => 'Lato',
+                        'inter' => 'Inter'
+                    ] as $value => $label)
+                        <option value="{{ $value }}" @selected(($settings['theme_font'] ?? 'montserrat') === $value)>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="grid gap-2">
+                <label>Base Font Size (px)</label>
+                <input type="number" name="theme_base_size" min="14" max="22" value="{{ $settings['theme_base_size'] ?? 16 }}" data-theme-input>
+            </div>
+            <div class="grid gap-2">
+                <label>Section Gap (px)</label>
+                <input type="number" name="theme_section_gap" min="10" max="40" value="{{ $settings['theme_section_gap'] ?? 18 }}" data-theme-input>
+            </div>
+            <div class="grid gap-2 md:col-span-2">
+                <label>Surface Color (rgba/hex)</label>
+                <input type="text" name="theme_surface" value="{{ $settings['theme_surface'] ?? 'rgba(255,255,255,0.06)' }}" data-theme-input>
+            </div>
+            <div class="grid gap-2 md:col-span-2">
+                <label>Surface Color 2 (rgba/hex)</label>
+                <input type="text" name="theme_surface_2" value="{{ $settings['theme_surface_2'] ?? 'rgba(255,255,255,0.09)' }}" data-theme-input>
+            </div>
+            <div class="grid gap-2 md:col-span-2">
+                <label>Border/Line Color (rgba/hex)</label>
+                <input type="text" name="theme_line" value="{{ $settings['theme_line'] ?? 'rgba(255,255,255,0.12)' }}" data-theme-input>
+            </div>
+            <div class="grid gap-2 md:col-span-2">
+                <label>Shadow CSS</label>
+                <input type="text" name="theme_shadow" value="{{ $settings['theme_shadow'] ?? '0 18px 60px rgba(0,0,0,0.35)' }}" data-theme-input>
+            </div>
+            <div class="grid gap-2 md:col-span-2">
+                <p class="text-sm text-neutral-600">These settings control your public design colors and card style without editing files.</p>
+            </div>
+            <div class="grid gap-2 md:col-span-2">
+                <label>Theme Preview</label>
+                <iframe id="theme-live-preview" class="w-full min-h-[420px] rounded-xl border border-black/10 bg-white" src="{{ route('home') }}" loading="lazy"></iframe>
+                <div class="flex flex-wrap gap-2 mt-2">
+                    <button class="btn btn-outline" type="button" id="theme-revert-btn">Revert Unsaved</button>
+                    <button class="btn btn-outline" type="button" id="theme-reset-btn">Reset to Default</button>
+                </div>
+                <small>Preview shows the real homepage and updates instantly. Save Settings to publish.</small>
             </div>
         </div>
 
@@ -209,6 +344,25 @@
         <button class="inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-semibold border border-transparent transition bg-black text-white shadow-lg" type="submit">Save Settings</button>
     </form>
 
+    @php
+        $themeDefaults = [
+            'theme_bg' => '#0b1220',
+            'theme_text' => '#ebeff7',
+            'theme_muted' => '#b4c0d0',
+            'theme_brand' => '#4dd0e1',
+            'theme_brand_2' => '#7c4dff',
+            'theme_surface' => 'rgba(255,255,255,0.06)',
+            'theme_surface_2' => 'rgba(255,255,255,0.09)',
+            'theme_line' => 'rgba(255,255,255,0.12)',
+            'theme_shadow' => '0 18px 60px rgba(0,0,0,0.35)',
+            'theme_radius' => '18',
+            'theme_maxw' => '1080',
+            'theme_font' => 'montserrat',
+            'theme_base_size' => '16',
+            'theme_section_gap' => '18',
+        ];
+    @endphp
+
     <script>
         (() => {
             const buttons = Array.from(document.querySelectorAll('[data-tab-button]'));
@@ -231,6 +385,113 @@
             });
 
             setActive('general');
+
+            const themeDefaults = @json($themeDefaults);
+
+            const themeFontStacks = {
+                montserrat: "'Montserrat', sans-serif",
+                poppins: "'Poppins', 'Segoe UI', sans-serif",
+                nunito: "'Nunito', 'Segoe UI', sans-serif",
+                lato: "'Lato', 'Segoe UI', sans-serif",
+                inter: "'Inter', 'Segoe UI', sans-serif",
+            };
+
+            const themeInputs = Array.from(document.querySelectorAll('[data-theme-input]'));
+            const colorInputs = Array.from(document.querySelectorAll('[data-color-input]'));
+            const themePreview = document.getElementById('theme-live-preview');
+            const themeRevertBtn = document.getElementById('theme-revert-btn');
+            const themeResetBtn = document.getElementById('theme-reset-btn');
+            const themePreviewUrl = @json(route('home'));
+            const themeInitial = Object.fromEntries(themeInputs.map((input) => [input.name, input.value]));
+
+            const readThemeValues = () => Object.fromEntries(themeInputs.map((input) => [input.name, input.value]));
+
+            const applyThemeValues = (values) => {
+                themeInputs.forEach((input) => {
+                    if (Object.prototype.hasOwnProperty.call(values, input.name)) {
+                        input.value = values[input.name];
+                    }
+                });
+            };
+
+            const updateColorIndicators = () => {
+                colorInputs.forEach((input) => {
+                    const valueEl = document.querySelector(`[data-color-value-for="${input.name}"]`);
+                    const chipEl = document.querySelector(`[data-color-chip-for="${input.name}"]`);
+                    if (valueEl) {
+                        valueEl.textContent = input.value;
+                    }
+                    if (chipEl) {
+                        chipEl.style.backgroundColor = input.value;
+                    }
+                });
+            };
+
+            const buildThemeVariables = (values) => {
+                const font = themeFontStacks[values.theme_font] || themeFontStacks.montserrat;
+                return {
+                    '--bg': values.theme_bg || themeDefaults.theme_bg,
+                    '--text': values.theme_text || themeDefaults.theme_text,
+                    '--muted': values.theme_muted || themeDefaults.theme_muted,
+                    '--brand': values.theme_brand || themeDefaults.theme_brand,
+                    '--brand-2': values.theme_brand_2 || themeDefaults.theme_brand_2,
+                    '--surface': values.theme_surface || themeDefaults.theme_surface,
+                    '--surface-2': values.theme_surface_2 || themeDefaults.theme_surface_2,
+                    '--line': values.theme_line || themeDefaults.theme_line,
+                    '--shadow': values.theme_shadow || themeDefaults.theme_shadow,
+                    '--radius': `${Number(values.theme_radius || themeDefaults.theme_radius)}px`,
+                    '--maxw': `${Number(values.theme_maxw || themeDefaults.theme_maxw)}px`,
+                    '--p': `${Number(values.theme_base_size || themeDefaults.theme_base_size)}px`,
+                    '--section-gap': `${Number(values.theme_section_gap || themeDefaults.theme_section_gap)}px`,
+                    '--theme-font': font,
+                };
+            };
+
+            const applyThemeToPreview = () => {
+                if (!themePreview) return;
+                const doc = themePreview.contentDocument;
+                if (!doc) return;
+                const previewBody = doc.querySelector('body.rv-theme') || doc.body;
+                if (!previewBody) return;
+
+                const vars = buildThemeVariables(readThemeValues());
+                Object.entries(vars).forEach(([name, value]) => {
+                    previewBody.style.setProperty(name, value);
+                });
+            };
+
+            const renderThemePreview = () => {
+                updateColorIndicators();
+                applyThemeToPreview();
+            };
+
+            if (themeInputs.length && themePreview) {
+                if (!themePreview.getAttribute('src')) {
+                    themePreview.setAttribute('src', themePreviewUrl);
+                }
+                themePreview.addEventListener('load', renderThemePreview);
+
+                themeInputs.forEach((input) => {
+                    input.addEventListener('input', renderThemePreview);
+                    input.addEventListener('change', renderThemePreview);
+                });
+
+                if (themeRevertBtn) {
+                    themeRevertBtn.addEventListener('click', () => {
+                        applyThemeValues(themeInitial);
+                        renderThemePreview();
+                    });
+                }
+
+                if (themeResetBtn) {
+                    themeResetBtn.addEventListener('click', () => {
+                        applyThemeValues(themeDefaults);
+                        renderThemePreview();
+                    });
+                }
+
+                renderThemePreview();
+            }
 
             const cssField = document.querySelector('[data-custom-css]');
             const jsField = document.querySelector('[data-custom-js]');

@@ -32,6 +32,49 @@
         $socialLinks = is_array($siteSettings['social_links'] ?? null) ? $siteSettings['social_links'] : [];
         $whatsappRaw = preg_replace('/\D+/', '', (string) ($siteSettings['whatsapp'] ?? ''));
         $whatsappLink = $whatsappRaw ? "https://wa.me/{$whatsappRaw}" : null;
+
+        $fontKey = (string) ($siteSettings['theme_font'] ?? 'montserrat');
+        $themeFonts = [
+            'montserrat' => "'Montserrat', sans-serif",
+            'poppins' => "'Poppins', 'Segoe UI', sans-serif",
+            'nunito' => "'Nunito', 'Segoe UI', sans-serif",
+            'lato' => "'Lato', 'Segoe UI', sans-serif",
+            'inter' => "'Inter', 'Segoe UI', sans-serif",
+        ];
+
+        $themeVariables = [];
+        foreach ([
+            '--bg' => 'theme_bg',
+            '--text' => 'theme_text',
+            '--muted' => 'theme_muted',
+            '--brand' => 'theme_brand',
+            '--brand-2' => 'theme_brand_2',
+            '--surface' => 'theme_surface',
+            '--surface-2' => 'theme_surface_2',
+            '--line' => 'theme_line',
+            '--shadow' => 'theme_shadow',
+        ] as $cssVar => $settingKey) {
+            $value = trim((string) ($siteSettings[$settingKey] ?? ''));
+            if ($value !== '') {
+                $themeVariables[$cssVar] = $value;
+            }
+        }
+
+        if (isset($themeFonts[$fontKey])) {
+            $themeVariables['--theme-font'] = $themeFonts[$fontKey];
+        }
+        if (!empty($siteSettings['theme_radius'])) {
+            $themeVariables['--radius'] = (int) $siteSettings['theme_radius'] . 'px';
+        }
+        if (!empty($siteSettings['theme_maxw'])) {
+            $themeVariables['--maxw'] = (int) $siteSettings['theme_maxw'] . 'px';
+        }
+        if (!empty($siteSettings['theme_base_size'])) {
+            $themeVariables['--p'] = (int) $siteSettings['theme_base_size'] . 'px';
+        }
+        if (!empty($siteSettings['theme_section_gap'])) {
+            $themeVariables['--section-gap'] = (int) $siteSettings['theme_section_gap'] . 'px';
+        }
     @endphp
 
     <title>{{ $seoTitle }}</title>
@@ -75,6 +118,15 @@
     @endif
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if(!empty($themeVariables))
+        <style>
+            body.rv-theme {
+                @foreach($themeVariables as $var => $value)
+                    {{ $var }}: {{ $value }};
+                @endforeach
+            }
+        </style>
+    @endif
     @if(!empty($siteSettings['custom_css']))
         <style>
             {!! $siteSettings['custom_css'] !!}
