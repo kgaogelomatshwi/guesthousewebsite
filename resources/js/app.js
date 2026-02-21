@@ -30,10 +30,20 @@ const handleSectionFields = () => {
     if (!selector) {
         return;
     }
+
+    const toggleBlockControls = (block, enabled) => {
+        block.querySelectorAll('input, select, textarea, button').forEach((field) => {
+            field.disabled = !enabled;
+        });
+    };
+
     const update = () => {
         const type = selector.value;
         document.querySelectorAll('.section-fields').forEach((block) => {
-            block.style.display = block.dataset.type === type ? 'block' : 'none';
+            const isActive = block.dataset.type === type;
+            block.style.display = isActive ? 'block' : 'none';
+            block.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+            toggleBlockControls(block, isActive);
         });
     };
     selector.addEventListener('change', update);
@@ -427,8 +437,7 @@ const attachMobileNav = () => {
     const nav = document.getElementById('site-nav');
     if (!toggle || !nav) return;
     toggle.addEventListener('click', () => {
-        const isOpen = nav.classList.toggle('max-h-80');
-        nav.classList.toggle('py-3', isOpen);
+        const isOpen = nav.classList.toggle('is-open');
         toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
 };

@@ -23,6 +23,15 @@
         $seoDescription = $page?->seo_description ?? ($siteSettings['default_seo_description'] ?? null);
         $logo = $siteSettings['logo'] ?? null;
         $favicon = $siteSettings['favicon'] ?? null;
+        $siteName = $siteSettings['site_name'] ?? 'Rural Villa Guesthouse';
+        $siteTagline = $siteSettings['site_tagline'] ?? 'High quality accommodation services';
+        $siteIntro = $siteSettings['site_intro'] ?? 'A tranquil countryside guesthouse in Limpopo, close to Blouberg and perfect for value-for-money stays.';
+        $contactPhone = $siteSettings['phone'] ?? '+27 61 050 5057';
+        $contactEmail = $siteSettings['email'] ?? 'info@ruralvillaguesthouse.co.za';
+        $contactAddress = $siteSettings['address'] ?? 'A0038 GA - Broekman, Westphalia Village, Capricorn District Municipality, Limpopo, South Africa';
+        $socialLinks = is_array($siteSettings['social_links'] ?? null) ? $siteSettings['social_links'] : [];
+        $whatsappRaw = preg_replace('/\D+/', '', (string) ($siteSettings['whatsapp'] ?? ''));
+        $whatsappLink = $whatsappRaw ? "https://wa.me/{$whatsappRaw}" : null;
     @endphp
 
     <title>{{ $seoTitle }}</title>
@@ -78,43 +87,62 @@
     @endif
     @stack('head')
 </head>
-<body @if(!empty($bodyEvent)) data-track-event="{{ $bodyEvent }}" @endif>
+<body class="rv-theme" @if(!empty($bodyEvent)) data-track-event="{{ $bodyEvent }}" @endif>
     @if(!empty($siteSettings['gtm_container_id']))
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ $siteSettings['gtm_container_id'] }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     @endif
 
-    <div class="bg-neutral-100 text-sm">
-        <div class="container flex items-center justify-end gap-4 py-2">
-            @auth
-                <a href="{{ route('guest.dashboard') }}">My Bookings</a>
-                <form method="post" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit">Logout</button>
-                </form>
-            @else
-                @if($bookingMode !== 'OTA_REDIRECT')
-                    <a href="{{ route('login') }}">Sign In</a>
-                    <a href="{{ route('register') }}">Create Account</a>
-                @endif
-            @endauth
+    <div class="site-topbar">
+        <div class="container site-topbar-inner">
+            <p class="site-topline">Tranquil countryside escape in Limpopo</p>
+            <div class="site-topbar-right">
+                <div class="site-topbar-actions">
+                    @if($contactPhone)
+                        <a href="tel:{{ preg_replace('/\s+/', '', $contactPhone) }}">{{ $contactPhone }}</a>
+                    @endif
+                    @if($contactEmail)
+                        <a href="mailto:{{ $contactEmail }}">{{ $contactEmail }}</a>
+                    @endif
+                </div>
+                @auth
+                    <div class="site-topbar-auth">
+                        <a href="{{ route('guest.dashboard') }}">My Bookings</a>
+                        <form method="post" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="button-link">Logout</button>
+                        </form>
+                    </div>
+                @else
+                    @if($bookingMode !== 'OTA_REDIRECT')
+                        <div class="site-topbar-auth">
+                            <a href="{{ route('login') }}">Sign In</a>
+                            <a href="{{ route('register') }}">Create Account</a>
+                        </div>
+                    @endif
+                @endauth
+            </div>
         </div>
     </div>
 
-    <header class="sticky top-0 z-50 bg-white border-b border-black/10">
-        <div class="container flex items-center justify-between gap-6 py-4">
-            <a class="text-sm font-bold tracking-widest uppercase" href="{{ route('home') }}">
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="logo" href="{{ route('home') }}">
                 @if($logo)
-                    <img class="h-10 md:h-12 w-auto max-w-[180px] object-contain" src="{{ asset('storage/' . $logo) }}" alt="{{ $siteSettings['site_name'] ?? 'Guesthouse' }}">
+                    <img class="logo-image" src="{{ asset('storage/' . $logo) }}" alt="{{ $siteName }}">
                 @else
-                    <span>{{ $siteSettings['site_name'] ?? 'Guesthouse' }}</span>
+                    <span class="logo-mark">{{ strtoupper(substr($siteName, 0, 1)) }}</span>
                 @endif
+                <span class="logo-text">
+                    <span class="logo-title">{{ $siteName }}</span>
+                    <span class="logo-subtitle">{{ $siteTagline }}</span>
+                </span>
             </a>
-            <button class="nav-toggle flex flex-col gap-1.5 border border-black/20 bg-white px-3 py-2 rounded-lg cursor-pointer md:hidden" type="button" aria-expanded="false" aria-controls="site-nav">
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
                 <span class="block w-5 h-0.5 bg-black"></span>
                 <span class="block w-5 h-0.5 bg-black"></span>
                 <span class="block w-5 h-0.5 bg-black"></span>
             </button>
-            <nav class="flex flex-col md:flex-row flex-wrap gap-5 font-semibold uppercase text-sm tracking-wider max-h-0 overflow-hidden md:max-h-none md:overflow-visible transition-all md:py-0 py-0 w-full md:w-auto" id="site-nav">
+            <nav class="nav" id="site-nav">
                 <a href="{{ route('rooms.index') }}">Rooms</a>
                 <a href="{{ route('pages.services') }}">Services</a>
                 <a href="{{ route('pages.contact') }}">Contact Us</a>
@@ -122,45 +150,68 @@
                     <a href="{{ route('guest.dashboard') }}">My Bookings</a>
                 @endauth
             </nav>
-            <div class="flex gap-3">
+            <div class="nav-cta">
                 @include('public.partials.booking-cta', ['variant' => 'header'])
             </div>
         </div>
     </header>
 
-    <main>
+    <main class="rv-main">
         @yield('content')
     </main>
 
-    <footer class="bg-black text-white py-14">
-        <div class="container grid gap-6" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-            <div>
-                <h4>{{ $siteSettings['site_name'] ?? 'Guesthouse' }}</h4>
-                <p>{{ $siteSettings['address'] ?? 'Address goes here' }}</p>
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <h4>{{ $siteName }}</h4>
+                <p>{{ $siteIntro }}</p>
+                <div class="footer-actions">
+                    <a class="btn btn-primary" href="{{ $primaryBookingUrl }}" @if($bookingMode === 'OTA_REDIRECT') target="_blank" rel="noopener" @endif>Book Online</a>
+                    @if($whatsappLink)
+                        <a class="btn btn-outline footer-outline" href="{{ $whatsappLink }}" target="_blank" rel="noopener">WhatsApp</a>
+                    @endif
+                </div>
             </div>
-            <div>
-                <h5>Contact</h5>
-                <p>{{ $siteSettings['phone'] ?? '' }}</p>
-                <p>{{ $siteSettings['email'] ?? '' }}</p>
-            </div>
-            <div>
-                <h5>Explore</h5>
-                <a href="{{ route('rooms.index') }}">Rooms</a>
-                <a href="{{ route('pages.services') }}">Services</a>
-                <a href="{{ route('pages.policies') }}">Policies</a>
-                <a href="{{ $primaryBookingUrl }}" @if($bookingMode === 'OTA_REDIRECT') target="_blank" rel="noopener" @endif>Book Now</a>
+            <div class="footer-column">
+                <h5>Useful Links</h5>
+                <a href="{{ route('pages.about') }}">About Us</a>
+                <a href="{{ route('attractions.index') }}">Location</a>
+                <a href="{{ route('pages.contact') }}">Contact Us</a>
                 @auth
                     <a href="{{ route('guest.dashboard') }}">My Bookings</a>
                 @else
                     @if($bookingMode !== 'OTA_REDIRECT')
                         <a href="{{ route('login') }}">Sign In</a>
-                        <a href="{{ route('register') }}">Create Account</a>
                     @endif
                 @endauth
             </div>
+            <div class="footer-column">
+                <h5>Explore</h5>
+                <a href="{{ route('rooms.index') }}">Rooms</a>
+                <a href="{{ route('pages.services') }}">Services</a>
+                <a href="{{ route('gallery.index') }}">Gallery</a>
+                <a href="{{ route('pages.policies') }}">Policies</a>
+            </div>
+            <div class="footer-column">
+                <h5>Contact Us</h5>
+                <p>{{ $contactAddress }}</p>
+                @if($contactPhone)
+                    <a href="tel:{{ preg_replace('/\s+/', '', $contactPhone) }}">{{ $contactPhone }}</a>
+                @endif
+                @if($contactEmail)
+                    <a href="mailto:{{ $contactEmail }}">{{ $contactEmail }}</a>
+                @endif
+                @foreach($socialLinks as $socialUrl)
+                    <a href="{{ $socialUrl }}" target="_blank" rel="noopener">{{ parse_url($socialUrl, PHP_URL_HOST) ?: $socialUrl }}</a>
+                @endforeach
+            </div>
         </div>
-        <div class="container mt-8 border-t border-white/20 pt-4 text-sm">
-            <p>(c) {{ date('Y') }} {{ $siteSettings['site_name'] ?? 'Guesthouse' }}. All rights reserved.</p>
+        <div class="container footer-bottom">
+            <p>© {{ date('Y') }} {{ $siteName }}. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="{{ route('pages.policies') }}">Policies</a>
+                <a href="{{ route('sitemap') }}">Sitemap</a>
+            </div>
         </div>
     </footer>
 

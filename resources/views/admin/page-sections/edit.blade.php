@@ -2,6 +2,9 @@
 
 @section('content')
     <h1 class="text-2xl font-semibold">Edit Section</h1>
+    @if($errors->any())
+        <x-alert type="error">{{ $errors->first() }}</x-alert>
+    @endif
     <form class="grid gap-4 mt-4" method="post" action="{{ route('admin.pages.sections.update', [$page, $section]) }}">
         @csrf
         @method('PUT')

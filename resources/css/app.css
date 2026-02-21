@@ -47,57 +47,135 @@
         @apply flex flex-wrap items-center justify-between gap-8;
     }
 
+    .site-topbar {
+        @apply border-b border-black/10 bg-neutral-50 text-xs text-neutral-700;
+    }
+
+    .site-topbar-inner {
+        @apply flex min-h-10 flex-wrap items-center justify-between gap-3 py-2;
+    }
+
+    .site-topline {
+        @apply uppercase tracking-[0.14em] text-[11px] font-semibold text-neutral-500;
+    }
+
+    .site-topbar-actions,
+    .site-topbar-auth {
+        @apply flex flex-wrap items-center gap-4;
+    }
+
+    .site-topbar-right {
+        @apply flex flex-wrap items-center justify-end gap-4;
+    }
+
+    .site-topbar-auth a,
+    .site-topbar-actions a {
+        @apply text-neutral-700 hover:text-black transition;
+    }
+
+    .button-link {
+        @apply cursor-pointer text-neutral-700 hover:text-black transition;
+    }
+
     .site-header {
-        @apply sticky top-0 z-50 bg-white border-b border-black/10;
+        @apply sticky top-0 z-50 border-b border-black/10 bg-white/95 backdrop-blur;
     }
 
     .header-inner {
-        @apply flex items-center justify-between gap-6 py-4;
+        @apply grid grid-cols-[auto_1fr_auto_auto] items-center gap-5 py-4;
     }
 
     .logo {
-        @apply text-sm font-bold tracking-widest uppercase;
+        @apply flex items-center gap-3 min-w-0;
     }
 
-    .logo img {
-        @apply h-11 object-contain;
+    .logo-image {
+        @apply h-12 w-auto max-w-[74px] object-contain rounded-full bg-neutral-100 p-1;
+    }
+
+    .logo-mark {
+        @apply inline-grid h-11 w-11 place-items-center rounded-full border border-black/20 bg-white font-bold text-sm;
+    }
+
+    .logo-text {
+        @apply grid gap-0.5 min-w-0;
+    }
+
+    .logo-title {
+        @apply block truncate text-sm font-bold uppercase tracking-[0.16em] text-neutral-900;
+    }
+
+    .logo-subtitle {
+        @apply block truncate text-[11px] uppercase tracking-[0.1em] text-neutral-500;
     }
 
     .nav {
-        @apply flex flex-wrap gap-5 font-semibold uppercase text-sm tracking-wider;
+        @apply flex items-center justify-center gap-6 text-sm font-semibold uppercase tracking-[0.12em];
     }
 
     .nav a {
-        @apply py-1;
+        @apply py-1 text-neutral-800 transition hover:text-black;
     }
 
     .nav-cta {
-        @apply flex gap-3;
+        @apply flex items-center justify-end gap-3;
     }
 
     .nav-toggle {
-        @apply hidden flex-col gap-1.5 border border-black/20 bg-white px-3 py-2 rounded-lg cursor-pointer;
+        @apply hidden flex-col gap-1.5 rounded-lg border border-black/20 bg-white px-3 py-2 cursor-pointer;
     }
 
     .nav-toggle span {
-        @apply block w-5 h-0.5 bg-black;
+        @apply block h-0.5 w-5 bg-black;
     }
 
     .site-footer {
-        @apply bg-black text-white py-14;
+        @apply bg-neutral-950 text-white pt-16 pb-10;
     }
 
     .footer-grid {
-        @apply grid gap-6;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        @apply grid gap-8;
+        grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
     }
 
-    .footer-grid a {
-        @apply block mb-2;
+    .footer-brand h4 {
+        @apply text-lg font-semibold tracking-[0.12em] uppercase;
+    }
+
+    .footer-brand p {
+        @apply mt-3 text-sm text-white/75 max-w-[50ch] leading-relaxed;
+    }
+
+    .footer-actions {
+        @apply mt-5 flex flex-wrap items-center gap-3;
+    }
+
+    .footer-outline {
+        @apply border-white/40 text-white hover:border-white hover:text-white;
+    }
+
+    .footer-column h5 {
+        @apply text-sm font-semibold uppercase tracking-[0.14em] text-white/80 mb-4;
+    }
+
+    .footer-column p {
+        @apply mb-3 text-sm text-white/75 leading-relaxed;
+    }
+
+    .footer-column a {
+        @apply block mb-2.5 text-sm text-white/85 hover:text-white transition;
     }
 
     .footer-bottom {
-        @apply mt-8 border-t border-white/20 pt-4 text-sm;
+        @apply mt-10 border-t border-white/20 pt-5 flex flex-wrap items-center justify-between gap-3 text-sm text-white/70;
+    }
+
+    .footer-bottom-links {
+        @apply flex flex-wrap items-center gap-4;
+    }
+
+    .footer-bottom-links a {
+        @apply text-white/80 hover:text-white;
     }
 
     .grid-2 {
@@ -474,24 +552,49 @@
 
 @layer utilities {
     @media (max-width: 900px) {
+        .site-topbar-inner {
+            @apply justify-end;
+        }
+
+        .site-topline,
+        .site-topbar-actions {
+            @apply hidden;
+        }
+
+        .site-topbar-auth {
+            @apply gap-3;
+        }
+
         .header-inner {
-            @apply flex-col items-start;
+            @apply grid-cols-[1fr_auto] gap-3 py-3;
         }
 
         .nav {
-            @apply flex-col w-full gap-3 overflow-hidden max-h-0 p-0 transition-all;
+            @apply col-span-2 flex-col items-start w-full gap-3 overflow-hidden max-h-0 p-0 transition-all border-t border-black/10;
         }
 
         .nav.is-open {
-            @apply max-h-80 py-3;
+            @apply max-h-80 pt-3;
         }
 
         .nav-toggle {
-            @apply flex self-end;
+            @apply flex;
         }
 
         .nav-cta {
-            @apply w-full justify-start pb-2;
+            @apply hidden;
+        }
+
+        .logo-subtitle {
+            @apply hidden;
+        }
+
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .footer-bottom {
+            @apply flex-col items-start;
         }
 
         .admin-shell {
@@ -534,5 +637,279 @@
             top: 3.25rem;
             right: 0.75rem;
         }
+    }
+}
+
+/* ================================
+   Rural Villa Guesthouse Theme
+   Public pages only (body.rv-theme)
+   ================================ */
+body.rv-theme {
+    --bg: #0b1220;
+    --surface: rgba(255, 255, 255, 0.06);
+    --surface-2: rgba(255, 255, 255, 0.09);
+    --text: rgba(255, 255, 255, 0.92);
+    --muted: rgba(255, 255, 255, 0.72);
+    --line: rgba(255, 255, 255, 0.12);
+    --brand: #4dd0e1;
+    --brand-2: #7c4dff;
+    --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+    --radius: 18px;
+    --maxw: 1080px;
+    --pad: clamp(16px, 3vw, 28px);
+    --h1: clamp(32px, 4vw, 46px);
+    --h2: clamp(22px, 2.6vw, 30px);
+    --h3: clamp(18px, 2vw, 22px);
+    --p: clamp(15px, 1.3vw, 16.5px);
+
+    margin: 0;
+    font-size: var(--p);
+    line-height: 1.65;
+    color: var(--text);
+    background:
+        radial-gradient(900px 500px at 20% 10%, rgba(77, 208, 225, 0.16), transparent 60%),
+        radial-gradient(700px 400px at 85% 20%, rgba(124, 77, 255, 0.16), transparent 55%),
+        radial-gradient(900px 600px at 50% 120%, rgba(255, 255, 255, 0.06), transparent 60%),
+        var(--bg);
+}
+
+body.rv-theme *,
+body.rv-theme *::before,
+body.rv-theme *::after {
+    box-sizing: border-box;
+}
+
+body.rv-theme img {
+    max-width: 100%;
+    display: block;
+}
+
+body.rv-theme a {
+    color: inherit;
+}
+
+body.rv-theme .container {
+    max-width: var(--maxw);
+    padding-inline: var(--pad);
+}
+
+body.rv-theme .site-topbar {
+    width: min(100% - (var(--pad) * 2), var(--maxw));
+    margin-inline: auto;
+    border: 0;
+    background: transparent;
+    padding-top: clamp(16px, 2.2vw, 24px);
+}
+
+body.rv-theme .site-topbar-inner {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    padding-inline: 14px;
+}
+
+body.rv-theme .site-topline,
+body.rv-theme .site-topbar-actions a,
+body.rv-theme .site-topbar-auth a,
+body.rv-theme .button-link {
+    color: var(--muted);
+}
+
+body.rv-theme .site-header {
+    width: min(100% - (var(--pad) * 2), var(--maxw));
+    margin-inline: auto;
+    margin-top: 10px;
+    top: 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+}
+
+body.rv-theme .logo-title {
+    color: var(--text);
+}
+
+body.rv-theme .logo-subtitle {
+    color: var(--muted);
+}
+
+body.rv-theme .logo-mark {
+    border-color: var(--line);
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+body.rv-theme .nav a {
+    color: var(--text);
+}
+
+body.rv-theme .rv-main {
+    padding: 18px 0 clamp(36px, 5vw, 68px);
+}
+
+body.rv-theme .rv-main h1 {
+    margin: 0 0 10px;
+    font-size: var(--h1);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
+body.rv-theme .rv-main h2 {
+    margin: 0 0 10px;
+    font-size: var(--h2);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--text);
+}
+
+body.rv-theme .rv-main h3 {
+    margin: 0 0 8px;
+    font-size: var(--h3);
+    line-height: 1.25;
+    color: var(--text);
+}
+
+body.rv-theme .rv-main p {
+    color: var(--muted);
+}
+
+/* Keep readable text inside white cards/blocks */
+body.rv-theme .rv-main .bg-white,
+body.rv-theme .rv-main .card,
+body.rv-theme .rv-main .contact-card,
+body.rv-theme .rv-main .table {
+    color: #0f172a;
+}
+
+body.rv-theme .rv-main .bg-white h1,
+body.rv-theme .rv-main .bg-white h2,
+body.rv-theme .rv-main .bg-white h3,
+body.rv-theme .rv-main .bg-white h4,
+body.rv-theme .rv-main .bg-white h5,
+body.rv-theme .rv-main .card h1,
+body.rv-theme .rv-main .card h2,
+body.rv-theme .rv-main .card h3,
+body.rv-theme .rv-main .card h4,
+body.rv-theme .rv-main .card h5 {
+    color: #0f172a;
+}
+
+body.rv-theme .rv-main .bg-white p,
+body.rv-theme .rv-main .card p {
+    color: #475569;
+}
+
+body.rv-theme .rv-main section {
+    margin-top: 18px;
+    padding: var(--pad);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+}
+
+body.rv-theme .rv-main section + section {
+    margin-top: 18px;
+}
+
+body.rv-theme .rv-main article {
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+body.rv-theme .rv-main ul {
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+}
+
+body.rv-theme .rv-main li {
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+}
+
+body.rv-theme .rv-main li::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--brand);
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: middle;
+    box-shadow: 0 0 0 4px rgba(77, 208, 225, 0.18);
+}
+
+body.rv-theme .btn-primary,
+body.rv-theme .rv-main section#cta a,
+body.rv-theme .rv-main section[aria-labelledby="cta"] a {
+    color: #08101f;
+    background: linear-gradient(135deg, var(--brand), rgba(77, 208, 225, 0.85));
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 14px 35px rgba(77, 208, 225, 0.2);
+}
+
+body.rv-theme .btn-outline {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--text);
+    background: transparent;
+}
+
+body.rv-theme .site-footer {
+    width: min(100% - (var(--pad) * 2), var(--maxw));
+    margin-inline: auto;
+    margin-top: 18px;
+    padding: var(--pad) 0 42px;
+    border-top: 1px solid var(--line);
+    background: transparent;
+    color: var(--muted);
+}
+
+body.rv-theme .footer-brand h4,
+body.rv-theme .footer-column h5,
+body.rv-theme .footer-bottom-links a {
+    color: var(--text);
+}
+
+body.rv-theme .footer-column a,
+body.rv-theme .footer-column p,
+body.rv-theme .footer-bottom p {
+    color: var(--muted);
+}
+
+body.rv-theme .whatsapp-float,
+body.rv-theme a.fixed.bottom-4.right-4 {
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    border: 0;
+    color: #fff;
+}
+
+@media (min-width: 860px) {
+    body.rv-theme .rv-main {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.rv-theme * {
+        scroll-behavior: auto;
     }
 }
